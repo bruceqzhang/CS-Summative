@@ -1,15 +1,16 @@
+import java.awt.Point;
 
 public class GameObject {
-    private String name;
-    private int level = 0, xPos = 0, yPos = 0, size = 0;
-    private boolean isActive, isVisible;
+    private String name = "N/A";
+    private int level = 0, size = 0;
+    private Point position = new Point(); //https://docs.oracle.com/javase/8/docs/api/java/awt/Point.html
+    private boolean isActive = false, isVisible = false;
 
-    public GameObject(int level, String name, int xPos, int yPos, int size){
+    public GameObject(int level, String name, Point position, int size){
         setLevel(level);
-        this.name = name;
-        this.xPos = xPos;
-        this.yPos = yPos;
-        this.size = size;
+        setName(name);
+        setPosition(position);
+        setSize(size);
     }
 
     public int getLevel(){
@@ -20,12 +21,8 @@ public class GameObject {
         return name;
     }
 
-    public int getXPos(){
-        return xPos;
-    }
-
-    public int getYPos(){
-        return yPos;
+    public Point position(){
+        return position;
     }
 
     public int getSize(){
@@ -50,17 +47,12 @@ public class GameObject {
         this.name = name;
     }
 
-    public void setXPos(int xPos){
-        if (xPos>=0){
-            this.xPos = xPos;
+    public void setPosition(Point position){
+        if (position.getX()>=0 && position.getY()>=0){
+            this.position = position;
         }
     }
 
-    public void setYPos(int yPos){
-        if (yPos>=0){
-            this.yPos = yPos;
-        }
-    }
 
     public void setSize(int size){
         if (size>=0){
