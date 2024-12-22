@@ -6,11 +6,13 @@ public class GameObject {
     private Point position = new Point(); //https://docs.oracle.com/javase/8/docs/api/java/awt/Point.html
     private boolean isActive = false, isVisible = false;
 
-    public GameObject(int level, String name, Point position, int size){
+    public GameObject(int level, String name, Point position, int size, boolean isActive, boolean isVisible){
         setLevel(level);
         setName(name);
         setPosition(position);
         setSize(size);
+        setActivity(isActive);
+        setVisibility(isVisible);
     }
 
     public int getLevel(){
