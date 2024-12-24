@@ -1,27 +1,33 @@
+
 import java.awt.Point;
 
 public class GameObject {
+    //Instance variables
     private String name = "N/A";
     private int level = 0, size = 0;
     private Point position = new Point(); //https://docs.oracle.com/javase/8/docs/api/java/awt/Point.html
     private boolean isActive = false, isVisible = false;
 
-    public GameObject(int level, String name, Point position, int size, boolean isActive, boolean isVisible){
-        setLevel(level);
+    //Main constructor
+    public GameObject(String name,int level, Point position, int size, boolean isActive, boolean isVisible){
         setName(name);
+        setLevel(level);
         setPosition(position);
         setSize(size);
         setActivity(isActive);
         setVisibility(isVisible);
     }
 
+    //Accessor methods
+
+    public String getName(){
+        return name;
+    }
+   
     public int getLevel(){
         return level;
     }
 
-    public String name(){
-        return name;
-    }
 
     public Point position(){
         return position;
@@ -39,14 +45,16 @@ public class GameObject {
         return isVisible;
     }
 
+    //Mutator Methods
+
+    public void setName(String name){
+        this.name = name;
+    }
+
     public void setLevel(int level){
         if (level>=0){
             this.level = level;
         }
-    }
-
-    public void setName(String name){
-        this.name = name;
     }
 
     public void setPosition(Point position){
@@ -54,7 +62,6 @@ public class GameObject {
             this.position = position;
         }
     }
-
 
     public void setSize(int size){
         if (size>=0){
