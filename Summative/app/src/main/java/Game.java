@@ -1,6 +1,5 @@
 import java.awt.image.BufferedImage;
 import java.io.*;
-import Resources.*;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 public class Game extends JFrame{
@@ -13,11 +12,12 @@ public class Game extends JFrame{
     }
     public Game(){
         importImg();
-        setSize(1280,640);
+
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setSize(1280,640);
         setLocationRelativeTo(null);
         gameScreen = new GameScreen(tileSet);
-        this.add(gameScreen);
+        this.add(gameScreen);       
         setVisible(true);
     }
     private void importImg() {

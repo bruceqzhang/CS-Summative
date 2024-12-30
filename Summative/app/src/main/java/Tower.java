@@ -11,7 +11,7 @@ public class Tower extends GameObject{
         super(name,level, position, size, isActive, isVisible);
         this.attack = attack;
         this.sprites = sprites;
-        this.damages = damages;=
+        this.damages = damages;
         this.ranges = ranges;
         this.splashes = splashes;
         this.attackSpeeds = attackSpeeds;
