@@ -9,19 +9,23 @@ public class GameScreen extends JPanel{
     private BufferedImage[][] tileOrder;
     private BufferedImage[][] allTiles;
     
+    //Constructor
     public GameScreen(BufferedImage tileSet){
         this.tileSet = tileSet;
+        //Creates a 25x14 matrix array with every possibly individual tile from the imported tileset
         allTiles = new BufferedImage[25][14];
         for (int x = 0; x<25; x++){
             for (int y = 0; y<14; y++){
                 allTiles[x][y] = tileSet.getSubimage(x*16, y*16, 16, 16);
             }
         }
+        //Sets the base tiles to be grass
         setGrassTiles();
     }
-    //
+    //Method to actually paint and draw out the GUI
     public void paintComponent(Graphics g){
-        //super.paintComponent(g);
+
+        //Drawing each tile as a grass tile, and sometimes drawing a prop or object on top
         for (int x = 0; x<40; x++){
             for (int y = 0; y<20; y++){
                 g.drawImage(tileOrder[x][y], x*32, y*32, 32, 32,null);
@@ -29,10 +33,12 @@ public class GameScreen extends JPanel{
             }
 
         }
+        //Draws the set path
         drawPath(g);
 
     }
 
+    //Sets the base tiles to be grass
     private void setGrassTiles(){
         tileOrder = new BufferedImage[40][20];
         for (int i = 0; i<tileOrder.length; i++){
@@ -43,6 +49,7 @@ public class GameScreen extends JPanel{
         
     }
 
+    //Finds random grasstiles
     private BufferedImage randomGrass(){
         int random = (int) (Math.random()*4);
         return switch(random){
@@ -55,6 +62,7 @@ public class GameScreen extends JPanel{
 
     }
 
+    //Occasionally finds random props 
     private BufferedImage randomProps(){
         int random = (int)(Math.random()*40);
         allTiles[14][12] = null;
@@ -69,10 +77,12 @@ public class GameScreen extends JPanel{
             case 0 -> allTiles[10+(int)(Math.random()*15)][11];
             case 1 -> allTiles[(int)(Math.random()*25)][12];
             case 2 -> allTiles[(int)(Math.random()*25)][13];
+            //From cases 3-39, does not return a prop so that only some tiles have props
             default -> null;
         };
     }
 
+    //Draws the path
     private void drawPath(Graphics g){
         drawHorizontal(g, 17, 0, 3);
         drawTopRight(g, 17, 3);
@@ -90,6 +100,8 @@ public class GameScreen extends JPanel{
         drawTopRight(g,29,3);
         drawVertical(g, 15, 29, 5);
     }
+
+    //Many methods designed to help draw the path; names are somewhat self-explanatory
 
     private void drawHorizontal(Graphics g, int length, int xStart, int yStart){
         for (int x = xStart; x<xStart+length; x++){
