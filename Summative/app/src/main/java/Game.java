@@ -3,8 +3,11 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 
@@ -13,8 +16,10 @@ public class Game extends JFrame implements Runnable{
     private GameScreen gameScreen;
     private Shop shop;
     private BufferedImage tileSet;
+    private Icon shopIcon;
     private Thread gameThread;
     private JButton shopToggleButton;
+    private BufferedImage shopBackground;
 
     private long previousTime;
     private long currentTime;
@@ -22,6 +27,7 @@ public class Game extends JFrame implements Runnable{
     private double elapsed;
     private final double UPS = 60.0;
     private final double TIME_PER_UPDATE = 1000.0/UPS;
+    
 
     private final static int tileSize = 32;
 
@@ -32,7 +38,7 @@ public class Game extends JFrame implements Runnable{
 
     public Game() {
         // Gets the bufferedImage of the image resource
-        importImage();
+        importImages();
 
         // Closes the program when the user closes the window
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -51,14 +57,15 @@ public class Game extends JFrame implements Runnable{
         add(gameScreen);
 
         Rectangle shopBounds  = new Rectangle(0, (int)(3/4.0 * getHeight()), getWidth(),(int)(1/4.0*getHeight()));
-        shop = new Shop(tileSet, shopBounds);
+        shop = new Shop(shopBackground, shopBounds);
         shop.setBounds(shopBounds);
         shop.setVisible(false);
         add(shop);
     
 
-        shopToggleButton = new JButton("Shop");
+        shopToggleButton = new JButton(shopIcon);
         shopToggleButton.setBounds(0, 15*32, 96, 32);
+        shopToggleButton.setContentAreaFilled(false);//
         shopToggleButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
@@ -90,16 +97,30 @@ public class Game extends JFrame implements Runnable{
 
 
 
-    // Imports the tileset
-    private void importImage() {
+    // Imports the required resources
+    private void importImages() {
         // Retrieves the filepath of the image and reads it with a stream of bytes
-        InputStream inputStream = getClass().getResourceAsStream("/Resources/GRASS.png");
+        InputStream tilesetInputStream = getClass().getResourceAsStream("/Resources/tileset.png");
         try {
             // Converts the stream into a bufferedImage
-            tileSet = ImageIO.read(inputStream);
+            tileSet = ImageIO.read(tilesetInputStream);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        InputStream shopInputStream = getClass().getResourceAsStream("/Resources/shopBackground.png");
+
+        try {
+            // Converts the stream into a bufferedImage
+            shopBackground = ImageIO.read(shopInputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Scales the icon to match the size of the button
+        Image scaledImage = new ImageIcon("Summative/app/src/main/java/Resources/shopButton.png").getImage().getScaledInstance(96,32, Image.SCALE_SMOOTH);
+        shopIcon = new ImageIcon(scaledImage); //https://www.tutorialspoint.com/how-to-add-icon-to-jbutton-in-java
+
     }
 
     @Override
