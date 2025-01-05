@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 public class GameScreen extends JPanel{
     private BufferedImage tileSet;
     private BufferedImage[][] tileOrder;
+    private BufferedImage[][] propOrder;
     private BufferedImage[][] allTiles;
     
     //Constructor
@@ -21,15 +22,16 @@ public class GameScreen extends JPanel{
         }
         //Sets the base tiles to be grass
         setGrassTiles();
+        setRandomProps();
     }
     //Method to actually paint and draw out the GUI
     public void paintComponent(Graphics g){
-
+        super.paintComponent(g);
         //Drawing each tile as a grass tile, and sometimes drawing a prop or object on top
         for (int x = 0; x<40; x++){
             for (int y = 0; y<20; y++){
                 g.drawImage(tileOrder[x][y], x*32, y*32, 32, 32,null);
-                g.drawImage(randomProps(), x*32, y*32, 32, 32, null);
+                g.drawImage(propOrder[x][y], x*32, y*32, 32, 32, null);
             }
 
         }
@@ -63,8 +65,9 @@ public class GameScreen extends JPanel{
     }
 
     //Occasionally finds random props 
-    private BufferedImage randomProps(){
-        int random = (int)(Math.random()*40);
+    private void setRandomProps(){
+        int randomProp;
+        propOrder = new BufferedImage[40][20];
         allTiles[14][12] = null;
         allTiles[19][12] = null;
         allTiles[20][12] = null;
@@ -73,13 +76,18 @@ public class GameScreen extends JPanel{
         allTiles[21][13] = null;
         allTiles[22][13] = null;
     
-        return switch(random){
-            case 0 -> allTiles[10+(int)(Math.random()*15)][11];
-            case 1 -> allTiles[(int)(Math.random()*25)][12];
-            case 2 -> allTiles[(int)(Math.random()*25)][13];
-            //From cases 3-39, does not return a prop so that only some tiles have props
-            default -> null;
-        };
+        for (int i = 0; i<propOrder.length; i++){
+            for (int j = 0; j<propOrder[i].length; j++){
+                randomProp = (int)(Math.random()*40);
+                propOrder[i][j] = switch(randomProp){
+                    case 0 -> allTiles[10+(int)(Math.random()*15)][11];
+                    case 1 -> allTiles[(int)(Math.random()*25)][12];
+                    case 2 -> allTiles[(int)(Math.random()*25)][13];
+                    //From cases 3-39, does not return a prop so that only some tiles have props
+                    default -> null;
+                };
+            }
+        }
     }
 
     //Draws the path
