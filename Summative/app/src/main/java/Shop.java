@@ -15,14 +15,10 @@ public class Shop extends JPanel{
     private static int coins;
     private static Tower[] towers;
     private BufferedImage background;
-    //private BufferedImage shopImage;
 
     public Shop(BufferedImage background, Rectangle bounds){
-        //this.tileSet = tileSet;
         this.background = background;
         setBounds(bounds);
-        //setSize((int)getBounds().getWidth(), (int)getBounds().getHeight()); 
-        //createShopImage();
         coins = 50;
         JButton sortButton = new JButton("A-Z");
     }
@@ -34,18 +30,6 @@ public class Shop extends JPanel{
         g.drawImage(background.getScaledInstance(getWidth(),getHeight(), Image.SCALE_SMOOTH ), 0, 0, getWidth(), getHeight(), null);
     }
 
-    /**private void createShopImage(){
-        shopImage = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = shopImage.createGraphics();
-
-        for (int x = 0; x<getWidth(); x+=32){
-            for (int y = 0; y<getHeight(); y+=32){
-               g2d.drawImage(tileSet.getSubimage(14*16, 12*16, 16, 16), x,y,32,32,null);
-        
-            }
-        }
-  
-    }*/
 
     
 

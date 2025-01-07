@@ -20,6 +20,8 @@ public class Game extends JFrame implements Runnable{
     private Thread gameThread;
     private JButton shopToggleButton;
     private BufferedImage shopBackground;
+    private int windowWidth;
+    private int windowHeight;
 
     private long previousTime;
     private long currentTime;
@@ -29,7 +31,7 @@ public class Game extends JFrame implements Runnable{
     private final double TIME_PER_UPDATE = 1000.0/UPS;
     
 
-    private final static int tileSize = 32;
+    private static int tileSize = 32;
 
     public static void main(String[] args) {
         new Game();
@@ -44,6 +46,9 @@ public class Game extends JFrame implements Runnable{
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         // Creates a 1280x640 px window
         setSize(tileSize*40, tileSize*20);
+
+        setResizable(true);
+
         // Window is placed at the centre of the screen
         setLocationRelativeTo(null);
 
@@ -65,7 +70,6 @@ public class Game extends JFrame implements Runnable{
 
         shopToggleButton = new JButton(shopIcon);
         shopToggleButton.setBounds(0, 15*32, 96, 32);
-        shopToggleButton.setContentAreaFilled(false);//
         shopToggleButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
@@ -74,7 +78,7 @@ public class Game extends JFrame implements Runnable{
         });
         add(shopToggleButton);
 
-        getContentPane().setComponentZOrder(gameScreen, 2);
+        getContentPane().setComponentZOrder(gameScreen, 2);//Chatgpt
         getContentPane().setComponentZOrder(shop, 1);
         getContentPane().setComponentZOrder(shopToggleButton, 0);
 
