@@ -13,7 +13,6 @@ import javax.swing.JButton;
 import java.awt.image.BufferedImage;
 public class Shop extends JPanel{
     private static int coins;
-    private static Tower[] towers;
     private BufferedImage background;
 
     // Constructor
