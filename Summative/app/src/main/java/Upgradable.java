@@ -1,3 +1,3 @@
-public class Upgradable {
-    
+public interface Upgradable {
+    public void upgrade();
 }
