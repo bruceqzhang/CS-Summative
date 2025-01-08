@@ -16,17 +16,19 @@ public class Shop extends JPanel{
     private static Tower[] towers;
     private BufferedImage background;
 
-    public Shop(BufferedImage background, Rectangle bounds){
+    // Constructor
+    public Shop(BufferedImage background){
         this.background = background;
-        setBounds(bounds);
         coins = 50;
         JButton sortButton = new JButton("A-Z");
     }
     
+    // Method called by default by repaint() that will essentially repaint the shop 
    @Override
     public void paintComponent(Graphics g){
+        // Drawing all child components of this
         super.paintComponent(g);
-        
+        // Drawing the background of the shop
         g.drawImage(background.getScaledInstance(getWidth(),getHeight(), Image.SCALE_SMOOTH ), 0, 0, getWidth(), getHeight(), null);
     }
 
@@ -36,6 +38,7 @@ public class Shop extends JPanel{
     public void arrangeAZ(){}
     public void arrangeCost(){}
 
+    // Toggles the visibility of the shop based on whether its already visibleß
     public void toggleVisibility() {//Chatgpt
         setVisible(!this.isVisible());
         revalidate();

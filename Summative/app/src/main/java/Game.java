@@ -33,11 +33,13 @@ public class Game extends JFrame implements Runnable{
 
     private static int tileSize = 32;
 
+    //Main method
     public static void main(String[] args) {
         new Game();
 
     }
 
+    //Constructor
     public Game() {
         // Gets the bufferedImage of the image resource
         importImages();
@@ -46,57 +48,68 @@ public class Game extends JFrame implements Runnable{
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         // Creates a 1280x640 px window
         setSize(tileSize*40, tileSize*20);
-
+        // Makes window resizable
         setResizable(true);
-
         // Window is placed at the centre of the screen
         setLocationRelativeTo(null);
-
+        // Removes any layouts and forces every component to have bounds
         setLayout(null);
 
 
         // Creates the game screen GUI object
         gameScreen = new GameScreen(tileSet);
+        // Covers entire JFrame with gameScreen
         gameScreen.setBounds(0,0,getWidth(), getHeight());
         // Loads the GUI onto the window
         add(gameScreen);
 
-        Rectangle shopBounds  = new Rectangle(0, (int)(3/4.0 * getHeight()), getWidth(),(int)(1/4.0*getHeight()));
-        shop = new Shop(shopBackground, shopBounds);
-        shop.setBounds(shopBounds);
+        // Initializing the shop
+        shop = new Shop(shopBackground);
+        // Setting the shop bounds 
+        shop.setBounds(0, (int)(3/4.0 * getHeight()), getWidth(),(int)(1/4.0*getHeight()));
+        // Adds the shop to the JFrame
         shop.setVisible(false);
+        // Making the shop invisible at the start
         add(shop);
     
-
+        // Initializing new JButton to toggle the shop
         shopToggleButton = new JButton(shopIcon);
+        // Setting the bounds of the button
         shopToggleButton.setBounds(0, 15*32, 96, 32);
+
+        // Linking the button to perform a task on click
         shopToggleButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
+                // Hides or shows the shop visibility
                 shop.toggleVisibility();
             }
         });
+
+        //Adds the button to the JFrame
         add(shopToggleButton);
 
+        //Sets the order of each component on the content pane
         getContentPane().setComponentZOrder(gameScreen, 2);//Chatgpt
         getContentPane().setComponentZOrder(shop, 1);
         getContentPane().setComponentZOrder(shopToggleButton, 0);
 
         // Makes the window visible
-        
         setVisible(true);
+
+        // Making sure that everything is displayed properly
         revalidate();
         repaint();
-        System.out.println("Shop visible: " + shop.isVisible());
-        System.out.println("Shop Bounds: " + shop.getBounds());
-        System.out.println("Button Bounds: " + shopToggleButton.getBounds());
 
+        //Starts gameThread
         gameThread = new Thread(this);
         gameThread.start();
 
         //https://chatgpt.com/share/67786f4d-d214-800f-89bd-c28037dc9ea9
     }
 
+    // Update method to be used for checking inputs and updating the changes in the actual game
+    // Such as movement of aliens or projectile motion
     private void update(){}
 
 
@@ -112,6 +125,7 @@ public class Game extends JFrame implements Runnable{
             e.printStackTrace();
         }
 
+        // Retrieves the filepath of the image and reads it with a stream of bytes
         InputStream shopInputStream = getClass().getResourceAsStream("/Resources/shopBackground.png");
 
         try {
@@ -127,10 +141,14 @@ public class Game extends JFrame implements Runnable{
 
     }
 
+    //Runnable method
     @Override
     public void run() {
+        
         accumulativeLag = 0;
         previousTime = System.currentTimeMillis();
+
+        //Game loop that updates and renders the game whilst keeping lag to a minimum
         while (true) {
 
             // Finds the time elapsed and adds it to the accumulativeLag
@@ -142,6 +160,7 @@ public class Game extends JFrame implements Runnable{
             while (accumulativeLag>= TIME_PER_UPDATE) {
                 // Updates the game
                 update();
+                //Adjusts acumulativeLag
                 accumulativeLag-=TIME_PER_UPDATE;
             }
 
@@ -154,7 +173,7 @@ public class Game extends JFrame implements Runnable{
         }
     }
 
-    // Finds the time elapsed and adds it to the accumulativeLag
+    // Helped method that finds the time elapsed and adds it to the accumulativeLag
     private void manageTime(){
         currentTime = System.currentTimeMillis();
         elapsed = currentTime-previousTime;
@@ -162,7 +181,7 @@ public class Game extends JFrame implements Runnable{
         previousTime = System.currentTimeMillis();
     }
 
-    //Trys to sleep as much as possible to reduce CPU utilisation
+    // Helper method to sleep as much as possible to reduce CPU utilisation
     private void sleep(int millis){
         try {
             Thread.sleep(millis);

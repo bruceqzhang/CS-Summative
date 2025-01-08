@@ -68,6 +68,7 @@ public class GameScreen extends JPanel{
     private void setRandomProps(){
         int randomProp;
         propOrder = new BufferedImage[40][20];
+        //Removing ugly and annoying tiles
         allTiles[14][12] = null;
         allTiles[19][12] = null;
         allTiles[20][12] = null;
@@ -76,6 +77,7 @@ public class GameScreen extends JPanel{
         allTiles[21][13] = null;
         allTiles[22][13] = null;
     
+        //Randomly and occasioanlly finds props
         for (int i = 0; i<propOrder.length; i++){
             for (int j = 0; j<propOrder[i].length; j++){
                 randomProp = (int)(Math.random()*40);
@@ -109,7 +111,7 @@ public class GameScreen extends JPanel{
         drawVertical(g, 15, 29, 5);
     }
 
-    //Many methods designed to help draw the path; names are somewhat self-explanatory
+    //Many helper methods designed to help draw the path; names are somewhat self-explanatory
 
     private void drawHorizontal(Graphics g, int length, int xStart, int yStart){
         for (int x = xStart; x<xStart+length; x++){
