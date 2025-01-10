@@ -15,13 +15,13 @@ import java.awt.event.ActionEvent;
 public class Game extends JFrame implements Runnable{
     private GameScreen gameScreen;
     private Shop shop;
+    private JButton shopToggleButton;
+    private Upgrade upgradePanel;
+
     private BufferedImage tileSet;
     private Icon shopIcon;
     private Thread gameThread;
-    private JButton shopToggleButton;
     private BufferedImage shopBackground;
-    private int windowWidth;
-    private int windowHeight;
 
     private long previousTime;
     private long currentTime;
@@ -30,8 +30,8 @@ public class Game extends JFrame implements Runnable{
     private final double UPS = 60.0;
     private final double TIME_PER_UPDATE = 1000.0/UPS;
     
-
-    private static int tileSize = 32;
+    private Rectangle windowBounds;
+    private int tileSize = 32;
 
     //Main method
     public static void main(String[] args) {
@@ -55,11 +55,12 @@ public class Game extends JFrame implements Runnable{
         // Removes any layouts and forces every component to have bounds
         setLayout(null);
 
+        windowBounds = getBounds();
 
         // Creates the game screen GUI object
         gameScreen = new GameScreen(tileSet);
         // Covers entire JFrame with gameScreen
-        gameScreen.setBounds(0,0,getWidth(), getHeight());
+        gameScreen.setBounds(windowBounds);
         // Loads the GUI onto the window
         add(gameScreen);
 
@@ -89,10 +90,17 @@ public class Game extends JFrame implements Runnable{
         //Adds the button to the JFrame
         add(shopToggleButton);
 
+        upgradePanel = new Upgrade(shopBackground);
+        upgradePanel.setLayout(null);
+        upgradePanel.setBounds();
+        upgradePanel.setVisible(true);
+        add(upgradePanel);
+
         //Sets the order of each component on the content pane
-        getContentPane().setComponentZOrder(gameScreen, 2);//Chatgpt
-        getContentPane().setComponentZOrder(shop, 1);
-        getContentPane().setComponentZOrder(shopToggleButton, 0);
+        getContentPane().setComponentZOrder(gameScreen, 3);//Chatgpt
+        getContentPane().setComponentZOrder(shop, 2);
+        getContentPane().setComponentZOrder(shopToggleButton, 1);
+        getContentPane().setComponentZOrder(upgradePanel,0);
 
         // Makes the window visible
         setVisible(true);

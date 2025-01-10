@@ -1,3 +1,3 @@
-public class Downgradable {
-    
+public interface Downgradable {
+    public void downgrade();
 }

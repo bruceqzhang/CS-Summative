@@ -36,7 +36,7 @@ public class GameObject {
     }
 
 
-    public Point position(){
+    public Point getPosition(){
         return position;
     }
 
