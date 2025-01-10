@@ -1,6 +1,10 @@
+package GameObjects;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+
+import Interfaces.Downgradable;
+import Interfaces.Removable;
 
 public class Alien extends GameObject implements Downgradable, Removable{
     private static ArrayList<Alien> activeAliens;

@@ -1,7 +1,7 @@
-import java.awt.Color;
+package Main;
 import java.awt.Graphics;
 import javax.swing.JPanel;
-import java.awt.Image;
+
 import java.awt.image.BufferedImage;
 
 public class GameScreen extends JPanel{
@@ -9,10 +9,16 @@ public class GameScreen extends JPanel{
     private BufferedImage[][] tileOrder;
     private BufferedImage[][] propOrder;
     private BufferedImage[][] allTiles;
+    private Game game;
     
     //Constructor
-    public GameScreen(BufferedImage tileSet){
+    public GameScreen(Game game, BufferedImage tileSet){
         this.tileSet = tileSet;
+        this.game = game;
+        // Covers entire JFrame with gameScreen
+        this.setBounds(0,0, game.getWidth(), game.getHeight());
+        // Loads the GUI onto the window
+        game.add(this);
         //Creates a 25x14 matrix array with every possibly individual tile from the imported tileset
         allTiles = new BufferedImage[25][14];
         for (int x = 0; x<25; x++){

@@ -1,3 +1,4 @@
+package Main;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -8,15 +9,14 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 import java.awt.Image;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 
 
 public class Game extends JFrame implements Runnable{
     private GameScreen gameScreen;
-    private Shop shop;
+    private ShopMenu shop;
     private JButton shopToggleButton;
-    private Upgrade upgradePanel;
+    private UpgradeMenu upgradeMenu;
 
     private BufferedImage tileSet;
     private Icon shopIcon;
@@ -30,7 +30,6 @@ public class Game extends JFrame implements Runnable{
     private final double UPS = 60.0;
     private final double TIME_PER_UPDATE = 1000.0/UPS;
     
-    private Rectangle windowBounds;
     private int tileSize = 32;
 
     //Main method
@@ -55,28 +54,18 @@ public class Game extends JFrame implements Runnable{
         // Removes any layouts and forces every component to have bounds
         setLayout(null);
 
-        windowBounds = getBounds();
+    
 
         // Creates the game screen GUI object
-        gameScreen = new GameScreen(tileSet);
-        // Covers entire JFrame with gameScreen
-        gameScreen.setBounds(windowBounds);
-        // Loads the GUI onto the window
-        add(gameScreen);
+        gameScreen = new GameScreen(this, tileSet);
 
         // Initializing the shop
-        shop = new Shop(shopBackground);
-        // Setting the shop bounds 
-        shop.setBounds(0, (int)(3/4.0 * getHeight()), getWidth(),(int)(1/4.0*getHeight()));
-        // Adds the shop to the JFrame
-        shop.setVisible(false);
-        // Making the shop invisible at the start
-        add(shop);
-    
+        shop = new ShopMenu(this, shopBackground);
+
         // Initializing new JButton to toggle the shop
         shopToggleButton = new JButton(shopIcon);
         // Setting the bounds of the button
-        shopToggleButton.setBounds(0, 15*32, 96, 32);
+        shopToggleButton.setBounds(0,(int)(0.75*getHeight()),(int)(0.075*getWidth()),(int)(0.05*getHeight()));
 
         // Linking the button to perform a task on click
         shopToggleButton.addActionListener(new ActionListener() {
@@ -90,17 +79,15 @@ public class Game extends JFrame implements Runnable{
         //Adds the button to the JFrame
         add(shopToggleButton);
 
-        upgradePanel = new Upgrade(shopBackground);
-        upgradePanel.setLayout(null);
-        upgradePanel.setBounds();
-        upgradePanel.setVisible(true);
-        add(upgradePanel);
+        upgradeMenu = new UpgradeMenu(this,shopBackground);
+
+    
 
         //Sets the order of each component on the content pane
         getContentPane().setComponentZOrder(gameScreen, 3);//Chatgpt
         getContentPane().setComponentZOrder(shop, 2);
         getContentPane().setComponentZOrder(shopToggleButton, 1);
-        getContentPane().setComponentZOrder(upgradePanel,0);
+        getContentPane().setComponentZOrder(upgradeMenu,0);
 
         // Makes the window visible
         setVisible(true);

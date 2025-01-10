@@ -1,7 +1,11 @@
+package GameObjects;
 import java.awt.image.BufferedImage;
 import java.awt.Point;
 import java.io.*;
 import java.util.ArrayList;
+
+import Interfaces.Placeable;
+import Interfaces.Upgradable;
 
 
 
