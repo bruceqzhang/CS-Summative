@@ -6,7 +6,10 @@ import GameObjects.Hooman;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.Icon;
 import javax.swing.JButton;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -15,10 +18,10 @@ public class UpgradeMenu extends JPanel{
     private BufferedImage background;
     private Hooman hooman;
     private Game game;
-    private static ArrayList<UpgradeMenu> upgradeMenus;
+    private static ArrayList<UpgradeMenu> upgradeMenus = new ArrayList<UpgradeMenu>();
 
     // Constructor
-    public UpgradeMenu (Game game, BufferedImage background/* , Hooman hooman*/){
+    public UpgradeMenu (Game game, BufferedImage background, Icon backButtonIcon/* , Hooman hooman*/){
         this.background = background;
         this.hooman = hooman;
         this.game = game;
@@ -29,10 +32,7 @@ public class UpgradeMenu extends JPanel{
         game.add(this);
         this.setVisible(true);
         
-        JButton closeButton = new JButton("Back");
-        closeButton.setBounds(0,0,(int)(0.075*game.getWidth()),(int)(0.075*game.getHeight()));
-        closeButton.setVisible(true);
-        add(closeButton);
+        
     }
     
     // Method called by default by repaint() that will essentially repaint the shop 
@@ -56,6 +56,7 @@ public class UpgradeMenu extends JPanel{
         setVisible(false);
         revalidate();
         repaint();
+        upgradeMenus.remove(this);
     }
     
 }

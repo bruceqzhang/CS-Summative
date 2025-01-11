@@ -9,6 +9,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 import java.awt.Image;
+import java.awt.MediaTracker;
 import java.awt.event.ActionEvent;
 
 
@@ -19,7 +20,7 @@ public class Game extends JFrame implements Runnable{
     private UpgradeMenu upgradeMenu;
 
     private BufferedImage tileSet;
-    private Icon shopIcon;
+    private Icon toggleShopButtonIcon, backButtonIcon;
     private Thread gameThread;
     private BufferedImage shopBackground;
 
@@ -40,13 +41,15 @@ public class Game extends JFrame implements Runnable{
 
     //Constructor
     public Game() {
+        // Creates a 1280x640 px window
+        setSize(tileSize*40, tileSize*20);
+
         // Gets the bufferedImage of the image resource
         importImages();
 
         // Closes the program when the user closes the window
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        // Creates a 1280x640 px window
-        setSize(tileSize*40, tileSize*20);
+
         // Makes window resizable
         setResizable(true);
         // Window is placed at the centre of the screen
@@ -63,7 +66,7 @@ public class Game extends JFrame implements Runnable{
         shop = new ShopMenu(this, shopBackground);
 
         // Initializing new JButton to toggle the shop
-        shopToggleButton = new JButton(shopIcon);
+        shopToggleButton = new JButton(toggleShopButtonIcon);
         // Setting the bounds of the button
         shopToggleButton.setBounds(0,(int)(0.75*getHeight()),(int)(0.075*getWidth()),(int)(0.05*getHeight()));
 
@@ -73,21 +76,23 @@ public class Game extends JFrame implements Runnable{
             public void actionPerformed(ActionEvent e){
                 // Hides or shows the shop visibility
                 shop.toggleVisibility();
+                upgradeMenu.close();
             }
         });
 
         //Adds the button to the JFrame
         add(shopToggleButton);
 
-        upgradeMenu = new UpgradeMenu(this,shopBackground);
+        upgradeMenu = new UpgradeMenu(this,shopBackground, toggleShopButtonIcon);
 
     
 
         //Sets the order of each component on the content pane
         getContentPane().setComponentZOrder(gameScreen, 3);//Chatgpt
         getContentPane().setComponentZOrder(shop, 2);
-        getContentPane().setComponentZOrder(shopToggleButton, 1);
-        getContentPane().setComponentZOrder(upgradeMenu,0);
+        getContentPane().setComponentZOrder(upgradeMenu,1);
+        getContentPane().setComponentZOrder(shopToggleButton, 0);
+        
 
         // Makes the window visible
         setVisible(true);
@@ -112,27 +117,25 @@ public class Game extends JFrame implements Runnable{
     // Imports the required resources
     private void importImages() {
         // Retrieves the filepath of the image and reads it with a stream of bytes
-        InputStream tilesetInputStream = getClass().getResourceAsStream("/Resources/tileset.png");
+        // and then converts the stream into a bufferedImage
         try {
-            // Converts the stream into a bufferedImage
-            tileSet = ImageIO.read(tilesetInputStream);
+            InputStream inputStream = getClass().getResourceAsStream("/Resources/tileset.png");
+            tileSet = ImageIO.read(inputStream);
+
+            inputStream = getClass().getResourceAsStream("/Resources/shopBackground.png");
+            shopBackground = ImageIO.read(inputStream);
+
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        } 
 
-        // Retrieves the filepath of the image and reads it with a stream of bytes
-        InputStream shopInputStream = getClass().getResourceAsStream("/Resources/shopBackground.png");
-
-        try {
-            // Converts the stream into a bufferedImage
-            shopBackground = ImageIO.read(shopInputStream);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         // Scales the icon to match the size of the button
-        Image scaledImage = new ImageIcon("Summative/app/src/main/java/Resources/shopButton.png").getImage().getScaledInstance(96,32, Image.SCALE_SMOOTH);
-        shopIcon = new ImageIcon(scaledImage); //https://www.tutorialspoint.com/how-to-add-icon-to-jbutton-in-java
+        Image scaledShopImage = new ImageIcon("Summative/app/src/main/java/Resources/shopButton.png").getImage().getScaledInstance((int)(0.075*getWidth()),(int)(0.05*getHeight()), Image.SCALE_SMOOTH);
+        toggleShopButtonIcon = new ImageIcon(scaledShopImage); //https://www.tutorialspoint.com/how-to-add-icon-to-jbutton-in-java
+
+        Image scaledBackImage = new ImageIcon("Summative/app/src/main/java/Resources/backButton.png").getImage().getScaledInstance((int)(0.075*getWidth()),(int)(0.05*getHeight()), Image.SCALE_AREA_AVERAGING);
+        backButtonIcon = new ImageIcon(scaledBackImage);
 
     }
 
