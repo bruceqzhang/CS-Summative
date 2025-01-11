@@ -3,19 +3,19 @@ import java.awt.image.BufferedImage;
 import java.awt.Point;
 import java.io.*;
 import java.util.ArrayList;
-
+import java.awt.Graphics;
 import Interfaces.Placeable;
 import Interfaces.Upgradable;
 
 
 
 public abstract class Hooman extends GameObject implements Upgradable, Placeable{
-    private static ArrayList<Hooman> activeHoomans; 
-    private Hooman[] sortedHoomans;
+    private static ArrayList<Hooman> activeHoomans = new ArrayList<Hooman>(); 
+    private static Hooman[] sortedHoomans;
     private static int currentSortType;
     private final int EVOLUTION_ORDER;
     private final int[] DAMAGE_PER_LEVEL, RANGE_PER_LEVEL, SPLASH_PER_LEVEL, ATTACK_SPEED_PER_LEVEL, COST_PER_LEVEL;
-    private ArrayList<Alien> targetAliens;
+    private ArrayList<Alien> targetAliens = new ArrayList<Alien>();
 
     //Constructor
     public Hooman (String name, int level, BufferedImage[] SPRITE_PER_LEVEL, Point position, boolean isActive, boolean isVisible,
@@ -118,7 +118,25 @@ public abstract class Hooman extends GameObject implements Upgradable, Placeable
 
     }
 
-    public abstract void attack();
+    public void attack(){
+        // Perform game logic
+        findTargetAliens();
+        if (getTargetAliens().isEmpty()) {
+            return;
+        }
+
+        // Visual animation
+        animateAttack();
+
+        //Apply damage to target aliens
+        for (Alien alien : getTargetAliens()) {
+            alien.takeDamage(getDamage());
+        }
+    }
+
+    public abstract void animateAttack();
+
+    public abstract void draw(Graphics g);
 
 
     //Placeable method
@@ -167,11 +185,17 @@ public abstract class Hooman extends GameObject implements Upgradable, Placeable
     private static void sortEvolution(){}
 
 
-    //public static ArrayList<Hooman> getHoomans(){}
+    public static ArrayList<Hooman> getHoomans(){
+        return activeHoomans;
+    }
 
-    public static void addHooman(Hooman hooman){}
+    public static void addHooman(Hooman hooman){
+        activeHoomans.add(hooman);
+    }
 
-    public static void setHooman(ArrayList<Hooman> hoomans){}
+    public static void setHooman(ArrayList<Hooman> hoomans){
+        activeHoomans = hoomans;
+    }
 
 
     /**Hooman extends GameObject implements Upgradable implements Placeable

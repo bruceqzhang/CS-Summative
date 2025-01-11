@@ -1,6 +1,11 @@
 package Main;
 import java.awt.Graphics;
 import javax.swing.JPanel;
+import java.util.ArrayList;
+
+import GameObjects.Alien;
+import GameObjects.GameObject;
+import GameObjects.Hooman;
 
 import java.awt.image.BufferedImage;
 
@@ -9,6 +14,7 @@ public class GameScreen extends JPanel{
     private BufferedImage[][] tileOrder;
     private BufferedImage[][] propOrder;
     private BufferedImage[][] allTiles;
+
     private Game game;
     
     //Constructor
@@ -43,6 +49,13 @@ public class GameScreen extends JPanel{
         }
         //Draws the set path
         drawPath(g);
+        for (Alien alien: Alien.getAliens()){
+            alien.draw(g);
+        }
+        for (Hooman hooman: Hooman.getHoomans()){
+            hooman.draw(g);
+        }
+        
 
     }
 

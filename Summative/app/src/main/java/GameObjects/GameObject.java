@@ -2,14 +2,17 @@ package GameObjects;
 
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.awt.Graphics;
+import java.util.ArrayList;
 
-public class GameObject {
+public abstract class GameObject {
     //Instance variables
     private String name = "N/A";
     private int level = 0, size = 0;
     private final BufferedImage[] SPRITE_PER_LEVEL;
     private Point position = new Point(); //https://docs.oracle.com/javase/8/docs/api/java/awt/Point.html
     private boolean isActive = false, isVisible = false;
+    private static ArrayList<GameObject> activeGameObjects = new ArrayList<GameObject>();
 
     //Main constructor
     public GameObject(String name, int level, BufferedImage[] SPRITE_PER_LEVEL, Point position, boolean isActive, boolean isVisible){
@@ -85,4 +88,21 @@ public class GameObject {
         this.isVisible = isVisible;
     }
 
+    public abstract void draw(Graphics g);
+
+    /*public static ArrayList<GameObject> getGameObjects(){
+        return activeGameObjects;
+    }
+
+    public static void setGameObjects(ArrayList<GameObject> gameObjects){
+        activeGameObjects = gameObjects;
+    }
+
+    public static void addGameObject(GameObject gameObject){
+        activeGameObjects.add(gameObject);
+    }
+
+    public static void removeGameObject(GameObject gameObject){
+        activeGameObjects.remove(gameObject);
+    }*/
 }

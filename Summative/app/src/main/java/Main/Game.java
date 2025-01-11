@@ -4,12 +4,19 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+
+import GameObjects.Caveman;
+import GameObjects.GameObject;
+import GameObjects.Hooman;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-
+import java.util.ArrayList;
+import java.awt.Component;
 import java.awt.Image;
 import java.awt.MediaTracker;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 
 
@@ -20,7 +27,7 @@ public class Game extends JFrame implements Runnable{
     private UpgradeMenu upgradeMenu;
 
     private BufferedImage tileSet;
-    private Icon toggleShopButtonIcon, backButtonIcon;
+    private Icon toggleShopButtonIcon;
     private Thread gameThread;
     private BufferedImage shopBackground;
 
@@ -30,7 +37,9 @@ public class Game extends JFrame implements Runnable{
     private double elapsed;
     private final double UPS = 60.0;
     private final double TIME_PER_UPDATE = 1000.0/UPS;
+
     
+    Caveman test;
     private int tileSize = 32;
 
     //Main method
@@ -57,7 +66,6 @@ public class Game extends JFrame implements Runnable{
         // Removes any layouts and forces every component to have bounds
         setLayout(null);
 
-    
 
         // Creates the game screen GUI object
         gameScreen = new GameScreen(this, tileSet);
@@ -80,13 +88,19 @@ public class Game extends JFrame implements Runnable{
             }
         });
 
+        upgradeMenu = new UpgradeMenu(this, shopBackground, toggleShopButtonIcon);
         //Adds the button to the JFrame
         add(shopToggleButton);
+        add(gameScreen);
+        add(shop);
+        add(upgradeMenu);
+        test = new Caveman(0, null, new Point(100,100), true, true, 0, new int[]{0,0,0}, null, null, null, null, gameScreen);
+  
 
-        upgradeMenu = new UpgradeMenu(this,shopBackground, toggleShopButtonIcon);
-
-    
-
+        System.out.println(getComponentCount());
+        for (Component c : getComponents()) {
+            System.out.println(c.getClass().getName());
+        }
         //Sets the order of each component on the content pane
         getContentPane().setComponentZOrder(gameScreen, 3);//Chatgpt
         getContentPane().setComponentZOrder(shop, 2);
@@ -106,11 +120,16 @@ public class Game extends JFrame implements Runnable{
         gameThread.start();
 
         //https://chatgpt.com/share/67786f4d-d214-800f-89bd-c28037dc9ea9
+
+        
+       
     }
 
     // Update method to be used for checking inputs and updating the changes in the actual game
     // Such as movement of aliens or projectile motion
-    private void update(){}
+    private void update(){
+        
+    }
 
 
 
@@ -134,10 +153,10 @@ public class Game extends JFrame implements Runnable{
         Image scaledShopImage = new ImageIcon("Summative/app/src/main/java/Resources/shopButton.png").getImage().getScaledInstance((int)(0.075*getWidth()),(int)(0.05*getHeight()), Image.SCALE_SMOOTH);
         toggleShopButtonIcon = new ImageIcon(scaledShopImage); //https://www.tutorialspoint.com/how-to-add-icon-to-jbutton-in-java
 
-        Image scaledBackImage = new ImageIcon("Summative/app/src/main/java/Resources/backButton.png").getImage().getScaledInstance((int)(0.075*getWidth()),(int)(0.05*getHeight()), Image.SCALE_AREA_AVERAGING);
-        backButtonIcon = new ImageIcon(scaledBackImage);
 
     }
+
+   
 
     //Runnable method
     @Override
