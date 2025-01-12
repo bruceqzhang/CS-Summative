@@ -176,41 +176,9 @@ public class Game extends JFrame implements Runnable{
     // Places a hooman at the specified position
     private void placeHooman(Point position) {
         try {
-            // Instantiate the selected hooman type dynamically
-            
-            /*// Constructor parameters for Hooman
-            Constructor<? extends Hooman> constructor = selectedHoomanType.getConstructor(
-            String.class, BufferedImage.class, Point.class, boolean.class, boolean.class,
-            int.class, int.class, int.class, int.class, int.class, int.class);
-            System.out.println("Class: " + selectedHoomanType.getName());
-            // Accessing private fields with reflection and making them accessible
-            Field nameField = selectedHoomanType.getDeclaredField("NAME");
-            Field spriteField = selectedHoomanType.getDeclaredField("SPRITE");
-            Field evolutionIndexField = selectedHoomanType.getDeclaredField("EVOLUTION_INDEX");
-            Field damageField = selectedHoomanType.getDeclaredField("DAMAGE");
-            Field rangeField = selectedHoomanType.getDeclaredField("RANGE");
-            Field splashField = selectedHoomanType.getDeclaredField("SPLASH");
-            Field reloadSpeedField = selectedHoomanType.getDeclaredField("RELOAD_SPEED");
-            Field costField = selectedHoomanType.getDeclaredField("COST");
-
-            // Making private fields accessible
-            nameField.setAccessible(true);
-            spriteField.setAccessible(true);
-            evolutionIndexField.setAccessible(true);
-            damageField.setAccessible(true);
-            rangeField.setAccessible(true);
-            splashField.setAccessible(true);
-            reloadSpeedField.setAccessible(true);
-            costField.setAccessible(true);
-
-            Hooman newHooman = constructor.newInstance(nameField.get(null), nameField.get(null), position, true, true, gameScreen,
-            evolutionIndexField.get(null), damageField.get(null), rangeField.get(null),
-            splashField.get(null), reloadSpeedField.get(null), costField.get(null));
-            hoomans.add(newHooman);
-            */
 
             Constructor <? extends Hooman> constructor = selectedHoomanType.getConstructor(Point.class, boolean.class, boolean.class, JPanel.class);
-            Hooman newHooman = constructor.newInstance(position, true, true, gameScreen);
+            Hooman newHooman = constructor.newInstance(new Point((int)position.getX()-20, (int)position.getY()-50), true, true, gameScreen);
             hoomans.add(newHooman);
 
             // Exit placement mode

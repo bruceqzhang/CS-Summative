@@ -26,6 +26,7 @@ public class Caveman extends Hooman{
     private static final int RELOAD_SPEED = 1000;
     private static final int COST = 30;
     
+
     public Caveman(Point position, boolean isActive, boolean isVisible, JPanel gameScreen){
         super(NAME, SPRITE, position, isActive, isVisible,
         EVOLUTION_INDEX, DAMAGE, RANGE, SPLASH, RELOAD_SPEED, COST);
