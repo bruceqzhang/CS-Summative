@@ -70,17 +70,19 @@ public class Caveman extends Hooman{
     @Override
     // Draw the Caveman and its attack animation
     public void draw(Graphics g) {
-        // Draw the Caveman
-        g.drawImage(SPRITE, (int)(getPosition().getX()), (int)getPosition().getY(), getSize(), getSize(), null);
+        if (getVisibility()){
+            // Draw the Caveman
+            g.drawImage(SPRITE, (int)(getPosition().getX()), (int)getPosition().getY(), getSize(), getSize(), null);
 
-        // Draw the sword swing (a simple line as an example)
-        if (swingAngle > 0) {
-            int x1 = (int) getPosition().getX() + 10;
-            int y1 = (int) getPosition().getY() + 10;
-            int x2 = x1 + (int) (50 * Math.cos(Math.toRadians(swingAngle)));
-            int y2 = y1 - (int) (50 * Math.sin(Math.toRadians(swingAngle)));
-            g.setColor(Color.RED);
-            g.drawLine(x1, y1, x2, y2);
+            // Draw the sword swing (a simple line as an example)
+            if (swingAngle > 0) {
+                int x1 = (int) getPosition().getX() + 10;
+                int y1 = (int) getPosition().getY() + 10;
+                int x2 = x1 + (int) (50 * Math.cos(Math.toRadians(swingAngle)));
+                int y2 = y1 - (int) (50 * Math.sin(Math.toRadians(swingAngle)));
+                g.setColor(Color.RED);
+                g.drawLine(x1, y1, x2, y2);
+            }
         }
     }
     

@@ -9,7 +9,7 @@ import Interfaces.Placeable;
 
 public abstract class Hooman extends GameObject implements Placeable{
     private static ArrayList<Hooman> activeHoomans = new ArrayList<Hooman>(); 
-    private static Hooman[] sortedHoomans;
+    private static Hooman[] sortedHoomans = {new Caveman(new Point(), false, false, null), new Caveman(new Point(), false, false, null)};
     private static int currentSortType;
     private final int evolutionIndex, damage, range, splash, reloadSpeed, cost;
     private ArrayList<Alien> targetAliens = new ArrayList<Alien>();
@@ -127,6 +127,10 @@ public abstract class Hooman extends GameObject implements Placeable{
         setPosition(position);
     }
 
+
+    public static Hooman[] getSortedHoomans(){
+        return sortedHoomans;
+    }
 
 
     public static int getCurrentSortType(){

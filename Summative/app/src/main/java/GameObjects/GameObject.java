@@ -10,17 +10,17 @@ public abstract class GameObject {
     private final int size = 48;
     private String name;
     private BufferedImage sprite;
-    private Point position = new Point(); //https://docs.oracle.com/javase/8/docs/api/java/awt/Point.html
+    private Point position; 
     private boolean isActive = false, isVisible = false;
     private static ArrayList<GameObject> activeGameObjects = new ArrayList<GameObject>();
 
     //Main constructor
     public GameObject(String name, BufferedImage sprite, Point position, boolean isActive, boolean isVisible){
-        setName(name);
-        setSprite(sprite);
-        setPosition(position);
-        setActivity(isActive);
-        setVisibility(isVisible);
+        this.name = name;
+        this.sprite = sprite;
+        this.position = position;
+        this.isActive = isActive;
+        this.isVisible = isVisible;
     }
 
     //Accessor methods

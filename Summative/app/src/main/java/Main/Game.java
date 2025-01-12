@@ -2,8 +2,12 @@ package Main;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import GameObjects.Caveman;
 import GameObjects.GameObject;
@@ -18,6 +22,8 @@ import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 
 public class Game extends JFrame implements Runnable{
@@ -38,8 +44,14 @@ public class Game extends JFrame implements Runnable{
     private final double TIME_PER_UPDATE = 1000.0/UPS;
 
     
-    Caveman test;
     private int tileSize = 32;
+
+    // Fields for hooman placement
+    private boolean isPlacingHooman = false;
+    private Class<? extends Hooman> selectedHoomanType = null; // Track selected hooman type
+    private ArrayList<Hooman> hoomans = new ArrayList<Hooman>(); // Store placed towers
+ 
+     
 
     //Main method
     public static void main(String[] args) {
@@ -90,7 +102,15 @@ public class Game extends JFrame implements Runnable{
         add(shopToggleButton);
 
   
-        test = new Caveman(new Point(100,100), true, true, gameScreen);
+        // Add mouse listener for hooman placement
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (isPlacingHooman && selectedHoomanType != null) {
+                    placeHooman(e.getPoint());
+                }
+            }
+        });
 
         
         //Sets the order of each component on the content pane
@@ -142,12 +162,67 @@ public class Game extends JFrame implements Runnable{
 
         // Scales the icon to match the size of the button
         Image scaledShopImage = new ImageIcon("Summative/app/src/main/java/Resources/shopButton.png").getImage().getScaledInstance((int)(0.075*getWidth()),(int)(0.05*getHeight()), Image.SCALE_SMOOTH);
-        toggleShopButtonIcon = new ImageIcon(scaledShopImage); //https://www.tutorialspoint.com/how-to-add-icon-to-jbutton-in-java
+        toggleShopButtonIcon = new ImageIcon(scaledShopImage); 
 
 
     }
 
-   
+    // Enables placement mode for the selected hooman
+    public void startPlacementMode(Class<? extends Hooman> hoomanType) {
+        isPlacingHooman = true;
+        selectedHoomanType = hoomanType;
+    }
+
+    // Places a hooman at the specified position
+    private void placeHooman(Point position) {
+        try {
+            // Instantiate the selected hooman type dynamically
+            
+            /*// Constructor parameters for Hooman
+            Constructor<? extends Hooman> constructor = selectedHoomanType.getConstructor(
+            String.class, BufferedImage.class, Point.class, boolean.class, boolean.class,
+            int.class, int.class, int.class, int.class, int.class, int.class);
+            System.out.println("Class: " + selectedHoomanType.getName());
+            // Accessing private fields with reflection and making them accessible
+            Field nameField = selectedHoomanType.getDeclaredField("NAME");
+            Field spriteField = selectedHoomanType.getDeclaredField("SPRITE");
+            Field evolutionIndexField = selectedHoomanType.getDeclaredField("EVOLUTION_INDEX");
+            Field damageField = selectedHoomanType.getDeclaredField("DAMAGE");
+            Field rangeField = selectedHoomanType.getDeclaredField("RANGE");
+            Field splashField = selectedHoomanType.getDeclaredField("SPLASH");
+            Field reloadSpeedField = selectedHoomanType.getDeclaredField("RELOAD_SPEED");
+            Field costField = selectedHoomanType.getDeclaredField("COST");
+
+            // Making private fields accessible
+            nameField.setAccessible(true);
+            spriteField.setAccessible(true);
+            evolutionIndexField.setAccessible(true);
+            damageField.setAccessible(true);
+            rangeField.setAccessible(true);
+            splashField.setAccessible(true);
+            reloadSpeedField.setAccessible(true);
+            costField.setAccessible(true);
+
+            Hooman newHooman = constructor.newInstance(nameField.get(null), nameField.get(null), position, true, true, gameScreen,
+            evolutionIndexField.get(null), damageField.get(null), rangeField.get(null),
+            splashField.get(null), reloadSpeedField.get(null), costField.get(null));
+            hoomans.add(newHooman);
+            */
+
+            Constructor <? extends Hooman> constructor = selectedHoomanType.getConstructor(Point.class, boolean.class, boolean.class, JPanel.class);
+            Hooman newHooman = constructor.newInstance(position, true, true, gameScreen);
+            hoomans.add(newHooman);
+
+            // Exit placement mode
+            isPlacingHooman = false;
+            selectedHoomanType = null;
+
+            // Repaint the game screen to show the new hooman
+            repaint();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     //Runnable method
     @Override

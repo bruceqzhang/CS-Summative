@@ -1,16 +1,24 @@
 package Main;
 import javax.swing.JPanel;
+import GameObjects.Caveman;
+import GameObjects.Hooman;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.image.BufferedImage;
+import java.awt.GridLayout;
+
+
 public class ShopMenu extends JPanel{
     private int coins;
     private BufferedImage background;
     private Game game;
+    
 
     // Constructor
     public ShopMenu(Game game, BufferedImage background){
@@ -22,7 +30,29 @@ public class ShopMenu extends JPanel{
         game.add(this);
         // Making the shop invisible at the start
         setVisible(false);
+
+        // Adds a panel on the shop menu for displaying Hooman buttons
+        JPanel hoomanPanel = new JPanel();
+        hoomanPanel.setLayout(new GridLayout(2,6,0,0));
+
+        for(Hooman hooman: Hooman.getSortedHoomans()){
+            // Uses html tags to label the buttons with multiple lines of text
+            JButton hoomanButton = new JButton("<html>"+hooman.getName()+"<br>"+hooman.getCost()+"</html>", new ImageIcon(hooman.getSprite().getScaledInstance(96,32, Image.SCALE_SMOOTH)));
+
+            hoomanButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    game.startPlacementMode(hooman.getClass()); // Enable placement mode for Caveman
+                }
+            });
+
+            hoomanPanel.add(hoomanButton);
+        }
+
         JButton sortButton = new JButton("A-Z");
+
+        add(hoomanPanel);
+
     }
     
     // Method called by default by repaint() that will essentially repaint the shop 
