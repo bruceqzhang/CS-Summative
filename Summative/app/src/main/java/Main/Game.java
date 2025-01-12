@@ -24,7 +24,6 @@ public class Game extends JFrame implements Runnable{
     private GameScreen gameScreen;
     private ShopMenu shop;
     private JButton shopToggleButton;
-    private UpgradeMenu upgradeMenu;
 
     private BufferedImage tileSet;
     private Icon toggleShopButtonIcon;
@@ -84,27 +83,19 @@ public class Game extends JFrame implements Runnable{
             public void actionPerformed(ActionEvent e){
                 // Hides or shows the shop visibility
                 shop.toggleVisibility();
-                upgradeMenu.close();
             }
         });
 
-        upgradeMenu = new UpgradeMenu(this, shopBackground, toggleShopButtonIcon);
         //Adds the button to the JFrame
         add(shopToggleButton);
-        add(gameScreen);
-        add(shop);
-        add(upgradeMenu);
-        test = new Caveman(0, null, new Point(100,100), true, true, 0, new int[]{0,0,0}, null, null, null, null, gameScreen);
-  
 
-        System.out.println(getComponentCount());
-        for (Component c : getComponents()) {
-            System.out.println(c.getClass().getName());
-        }
+  
+        test = new Caveman(new Point(100,100), true, true, gameScreen);
+
+        
         //Sets the order of each component on the content pane
-        getContentPane().setComponentZOrder(gameScreen, 3);//Chatgpt
-        getContentPane().setComponentZOrder(shop, 2);
-        getContentPane().setComponentZOrder(upgradeMenu,1);
+        getContentPane().setComponentZOrder(gameScreen, 2);//Chatgpt
+        getContentPane().setComponentZOrder(shop, 1);
         getContentPane().setComponentZOrder(shopToggleButton, 0);
         
 

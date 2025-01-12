@@ -1,34 +1,31 @@
 package GameObjects;
 import java.awt.image.BufferedImage;
 import java.awt.Point;
-import java.io.*;
 import java.util.ArrayList;
 import java.awt.Graphics;
 import Interfaces.Placeable;
-import Interfaces.Upgradable;
 
 
 
-public abstract class Hooman extends GameObject implements Upgradable, Placeable{
+public abstract class Hooman extends GameObject implements Placeable{
     private static ArrayList<Hooman> activeHoomans = new ArrayList<Hooman>(); 
     private static Hooman[] sortedHoomans;
     private static int currentSortType;
-    private final int EVOLUTION_ORDER;
-    private final int[] DAMAGE_PER_LEVEL, RANGE_PER_LEVEL, SPLASH_PER_LEVEL, ATTACK_SPEED_PER_LEVEL, COST_PER_LEVEL;
+    private final int evolutionIndex, damage, range, splash, reloadSpeed, cost;
     private ArrayList<Alien> targetAliens = new ArrayList<Alien>();
 
     //Constructor
-    public Hooman (String name, int level, BufferedImage[] SPRITE_PER_LEVEL, Point position, boolean isActive, boolean isVisible,
-                   int EVOLUTION_ORDER, int[] DAMAGE_PER_LEVEL, int[] RANGE_PER_LEVEL, int[] SPLASH_PER_LEVEL, int[] ATTACK_SPEED_PER_LEVEL, int[] COST_PER_LEVEL){
+    public Hooman (String name, BufferedImage sprite, Point position, boolean isActive, boolean isVisible,
+                   int evolutionIndex, int damage, int range, int splash, int reloadSpeed, int cost){
         //Call to parent GameObject constructor
-        super(name,level, SPRITE_PER_LEVEL, position, isActive, isVisible);
+        super(name, sprite, position, isActive, isVisible);
 
-        this.EVOLUTION_ORDER = EVOLUTION_ORDER;
-        this.DAMAGE_PER_LEVEL = DAMAGE_PER_LEVEL;
-        this.RANGE_PER_LEVEL = RANGE_PER_LEVEL;
-        this.SPLASH_PER_LEVEL = SPLASH_PER_LEVEL;
-        this.ATTACK_SPEED_PER_LEVEL = ATTACK_SPEED_PER_LEVEL;
-        this.COST_PER_LEVEL = COST_PER_LEVEL;
+        this.evolutionIndex = evolutionIndex;
+        this.damage = damage;
+        this.range = range;
+        this.splash = splash;
+        this.reloadSpeed = reloadSpeed;
+        this.cost = cost;
 
         //Adding this object to a static arrayList for all Hooman objects
         activeHoomans.add(this);
@@ -37,49 +34,30 @@ public abstract class Hooman extends GameObject implements Upgradable, Placeable
 
     //Accessor Methods
 
-    public int getEvolutionOrder(){
-        return EVOLUTION_ORDER;
+    public int getEvolutionIndex(){
+        return evolutionIndex;
     }
 
     public int getDamage(){
-        return DAMAGE_PER_LEVEL[getLevel()];
-    }
-
-    public int getNextDamage(){
-        return DAMAGE_PER_LEVEL[getLevel()+1];
+        return damage;
     }
 
     public int getRange(){
-        return RANGE_PER_LEVEL[getLevel()];
-    }
-
-    public int getNextRange(){
-        return RANGE_PER_LEVEL[getLevel()+1];
+        return range;
     }
 
     public int getSplash(){
-        return SPLASH_PER_LEVEL[getLevel()];
+        return splash;
     }
 
-    public int getNextSplash(){
-        return SPLASH_PER_LEVEL[getLevel()+1];
-    }
-
-    public int getAttackSpeed(){
-        return ATTACK_SPEED_PER_LEVEL[getLevel()];
-    }
-
-    public int getNextAttackSpeed(){
-        return ATTACK_SPEED_PER_LEVEL[getLevel()+1];
+    public int getReloadSpeed(){
+        return reloadSpeed;
     }
 
     public int getCost(){
-        return COST_PER_LEVEL[getLevel()];
+        return cost;
     }
 
-    public int getNextCost(){
-        return COST_PER_LEVEL[getLevel()+1];
-    }
 
     public ArrayList<Alien> getTargetAliens(){
         return targetAliens;
@@ -94,7 +72,7 @@ public abstract class Hooman extends GameObject implements Upgradable, Placeable
     }
 
     private int compareToEvolution(Hooman hooman){
-        return getEvolutionOrder() - hooman.getEvolutionOrder();
+        return getEvolutionIndex() - hooman.getEvolutionIndex();
     }
 
     public void findTargetAliens(){
@@ -134,6 +112,7 @@ public abstract class Hooman extends GameObject implements Upgradable, Placeable
         }
     }
 
+
     public abstract void animateAttack();
 
     public abstract void draw(Graphics g);
@@ -149,12 +128,6 @@ public abstract class Hooman extends GameObject implements Upgradable, Placeable
     }
 
 
-    //Upgradable method
-    //Changing levels
-    @Override
-    public void upgrade() {
-        setLevel(getLevel()+1);
-    }
 
     public static int getCurrentSortType(){
         return currentSortType;
@@ -198,33 +171,4 @@ public abstract class Hooman extends GameObject implements Upgradable, Placeable
     }
 
 
-    /**Hooman extends GameObject implements Upgradable implements Placeable
-    - activeHoomans: ArrayList<Hooman>
-    - sortedHoomans: Hooman[]
-    - currentSortType: int
-    - EVOLUTION_ORDER: int
-    - DAMAGE_PER_LEVEL: int[]
-    - RANGE_PER_LEVEL: int[]
-    - SPLASH_PER_LEVEL: int[]
-    - ATTACK_SPEED_PER_LEVEL: int[]
-    - COST_PER_LEVEL: int[]
-    + Hooman(String name, int level, BufferedImage[] SPRITE_PER_LEVEL, Point position, boolean isActive, boolean isVisible, int EVOLUTION_ORDER, int[] DAMAGE_PER_LEVEL, int[] RANGE_PER_LEVEL, int[] SPLASH_PER_LEVEL, int[] ATTACK_SPEED_PER_LEVEL, int[] COST_PER_LEVEL)
-    + getDamage(): int
-    + getRange(): int
-    + getSplash(): int
-    + getAttackSpeed(): int
-    + getCost(): int
-    + Attack(): void
-    + Upgrade(): void
-    + Place(Point position): void
-    + sort(): void
-    - sortAZ(): void
-    - sortCost(): void
-    - sortEvolution(): void
-    - switchSortType(): void
-    + getHoomans(): ArrayList<Hooman>
-    + addHooman(Hooman hooman): void
-    + setHooman(ArrayList<Hooman> hoomans): void
-    
-    */
 }

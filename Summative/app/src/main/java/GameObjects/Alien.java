@@ -9,39 +9,64 @@ import Interfaces.Removable;
 
 public class Alien extends GameObject implements Downgradable, Removable{
     private static ArrayList<Alien> activeAliens = new ArrayList<Alien>();
-    private final int[] SPEED_PER_LEVEL, HEALTH_PER_LEVEL;
-    private final Point[] WAYPOINTS;
-    private int currentWaypointIndex, health;
+    private static final String[] NAME_PER_LEVEL = {};
+    private static final BufferedImage[] SPRITE_PER_LEVEL ={};
+    private static final int[] SPEED_PER_LEVEL ={5,7,10,15,15}, MAX_HEALTH_PER_LEVEL = {50,50,75,100,200};
+    private static final Point[] WAYPOINTS = {};
+    private int levelIndex;
+    private int speed, maxHealth, currentWaypointIndex, currentHealth;
 
     //Constructor
-    public Alien(String name, int level, BufferedImage[] SPRITE_PER_LEVEL, Point position, boolean isActive, boolean isVisible, int[] SPEED_PER_LEVEL, int[] HEALTH_PER_LEVEL, Point[] WAYPOINTS, int currentWaypointIndex){
-        super(name, level, SPRITE_PER_LEVEL, position, isActive, isVisible);
-        this.SPEED_PER_LEVEL = SPEED_PER_LEVEL;
-        this.HEALTH_PER_LEVEL = HEALTH_PER_LEVEL;
-        health = HEALTH_PER_LEVEL[level];
-        this.WAYPOINTS = WAYPOINTS;
+    public Alien(String name, BufferedImage sprite, Point position, boolean isActive, boolean isVisible, int levelIndex, int currentWaypointIndex){
+        super(NAME_PER_LEVEL[levelIndex], SPRITE_PER_LEVEL[levelIndex], position, isActive, isVisible);
+        this.levelIndex = levelIndex;
+        this.speed = SPEED_PER_LEVEL[levelIndex];
+        this.maxHealth = MAX_HEALTH_PER_LEVEL[levelIndex];
+        currentHealth = maxHealth;
         this.currentWaypointIndex = currentWaypointIndex;
     }
 
+    public int getLevelIndex(){
+        return levelIndex;
+    }
+
     public int getSpeed(){
-        return SPEED_PER_LEVEL[getLevel()];
+        return speed;
     }
 
     public int getMaxHealth(){
-        return HEALTH_PER_LEVEL[getLevel()];
+        return maxHealth;
+    }
+
+    public int getCurrentHealth(){
+        return currentHealth;
     }
 
     public int getCurrentWaypointIndex(){
         return currentWaypointIndex;
     }
 
-    public void updateCurrentWaypointIndex(){
-        currentWaypointIndex++;
+    public void decrementLevelIndex(){
+        levelIndex++;
     }
 
+    public void updateSpeed(){
+        speed = SPEED_PER_LEVEL[getLevelIndex()];
+    }
+
+    public void updateHealth(){
+        maxHealth = MAX_HEALTH_PER_LEVEL[getLevelIndex()];
+        currentHealth = maxHealth;
+    }
+
+    public void updateCurrentWaypointIndex(){
+        currentWaypointIndex--;
+    }
+
+
     public void takeDamage(int damage) {
-        health-=damage;
-        if (health>=0){
+        currentHealth-=damage;
+        if (currentHealth>=0){
             downgrade();
         }
     }
@@ -55,8 +80,14 @@ public class Alien extends GameObject implements Downgradable, Removable{
 
     @Override
     public void downgrade() {
-        setLevel(getLevel()-1);
-        if (getLevel()<0){
+        if (getLevelIndex()>0){
+            decrementLevelIndex();
+            updateSpeed();
+            updateHealth();
+            setName(NAME_PER_LEVEL[levelIndex]);
+            setSprite(SPRITE_PER_LEVEL[levelIndex]);
+        }
+        else{
             remove();
         }
     }
@@ -81,6 +112,12 @@ public class Alien extends GameObject implements Downgradable, Removable{
     public void draw(Graphics g) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'draw'");
+    }
+
+    public BufferedImage[] importSprites() {
+        BufferedImage[] sprites = new BufferedImage[5];
+
+        return sprites;
     }
 
     

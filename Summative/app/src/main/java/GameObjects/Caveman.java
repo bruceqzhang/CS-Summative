@@ -16,46 +16,37 @@ public class Caveman extends Hooman{
     private Timer swingTimer;
     private JPanel gameScreen;
     private int swingAngle;
-    private static final int MAX_UPGRADE = 3;
-    private static final String NAME = "Caveman";
-    private static final BufferedImage[] SPRITE_PER_LEVEL = new BufferedImage[3];
-    private static final int EVOLUTION_ORDER = 0;
-    private static final int[] DAMAGE_PER_LEVEL = {10,15,25};
-    private static final int[] RANGE_PER_LEVEL = {15,15,15};
-    private static final int[] SPLASH_PER_LEVEL = {2,5,5};
-    private static final int[] ATTACK_SPEED_PER_LEVEL = {1000,750,500};
     
-    public Caveman(int level, Point Position, boolean isActive, boolean isVisible, JPanel gameScreen){
-        importSprites();
+    private static final String NAME = "Caveman";
+    private static final BufferedImage SPRITE = importSprites()[0];
+    private static final int EVOLUTION_INDEX = 0;
+    private static final int DAMAGE = 20;
+    private static final int RANGE = 20;
+    private static final int SPLASH = 20;
+    private static final int RELOAD_SPEED = 1000;
+    private static final int COST = 30;
+    
+    public Caveman(Point position, boolean isActive, boolean isVisible, JPanel gameScreen){
+        super(NAME, SPRITE, position, isActive, isVisible,
+        EVOLUTION_INDEX, DAMAGE, RANGE, SPLASH, RELOAD_SPEED, COST);
 
-    }
 
-   
-
-    private Caveman(String name, int level, BufferedImage[] SPRITE_PER_LEVEL, Point position, boolean isActive, boolean isVisible,
-                   int EVOLUTION_ORDER, int[] DAMAGE_PER_LEVEL, int[] RANGE_PER_LEVEL, int[] SPLASH_PER_LEVEL, 
-                   int[] ATTACK_SPEED_PER_LEVEL, int[] COST_PER_LEVEL, JPanel gameScreen) {
-
-        super(name, level, SPRITE_PER_LEVEL, position, isActive, isVisible, EVOLUTION_ORDER, 
-              DAMAGE_PER_LEVEL, RANGE_PER_LEVEL, SPLASH_PER_LEVEL, ATTACK_SPEED_PER_LEVEL, COST_PER_LEVEL);
-
-        this.gameScreen = gameScreen; // Panel where the game is rendered
-
+        // Panel where the game is rendered
+        this.gameScreen = gameScreen; 
         swingAngle = 0;
     }
 
-    private void importSprites() {
+    
+    private static BufferedImage[] importSprites() {
+        BufferedImage[] sprites = new BufferedImage[1];
         try{
-            InputStream inputStream = getClass().getResourceAsStream("/Resources/Caveman1.png");
-            SPRITE_PER_LEVEL[0] = ImageIO.read(inputStream);
-            inputStream = getClass().getResourceAsStream("/Resources/Caveman2.png");
-            SPRITE_PER_LEVEL[1] = ImageIO.read(inputStream);
-            inputStream = getClass().getResourceAsStream("/Resources/Caveman3.png");
-            SPRITE_PER_LEVEL[2] = ImageIO.read(inputStream);
+            InputStream inputStream = Caveman.class.getResourceAsStream("/Resources/caveman.png");
+            sprites[0] = ImageIO.read(inputStream);
         }
         catch(IOException e){
             e.printStackTrace();
         }
+        return sprites;
     }
 
 
@@ -77,11 +68,10 @@ public class Caveman extends Hooman{
     }
 
     @Override
-    // Draw the tower and its attack animation
+    // Draw the Caveman and its attack animation
     public void draw(Graphics g) {
-        // Draw the tower
-        g.setColor(Color.BLUE);
-        g.fillRect((int) getPosition().getX(), (int) getPosition().getY(), 20, 20);
+        // Draw the Caveman
+        g.drawImage(SPRITE, (int)(getPosition().getX()), (int)getPosition().getY(), getSize(), getSize(), null);
 
         // Draw the sword swing (a simple line as an example)
         if (swingAngle > 0) {

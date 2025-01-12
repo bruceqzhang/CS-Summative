@@ -7,20 +7,18 @@ import java.util.ArrayList;
 
 public abstract class GameObject {
     //Instance variables
-    private String name = "N/A";
-    private int level = 0, size = 0;
-    private final BufferedImage[] SPRITE_PER_LEVEL;
+    private final int size = 48;
+    private String name;
+    private BufferedImage sprite;
     private Point position = new Point(); //https://docs.oracle.com/javase/8/docs/api/java/awt/Point.html
     private boolean isActive = false, isVisible = false;
     private static ArrayList<GameObject> activeGameObjects = new ArrayList<GameObject>();
 
     //Main constructor
-    public GameObject(String name, int level, BufferedImage[] SPRITE_PER_LEVEL, Point position, boolean isActive, boolean isVisible){
+    public GameObject(String name, BufferedImage sprite, Point position, boolean isActive, boolean isVisible){
         setName(name);
-        setLevel(level);
-        this.SPRITE_PER_LEVEL = SPRITE_PER_LEVEL;
+        setSprite(sprite);
         setPosition(position);
-        setSize(size);
         setActivity(isActive);
         setVisibility(isVisible);
     }
@@ -31,21 +29,16 @@ public abstract class GameObject {
         return name;
     }
    
-    public int getLevel(){
-        return level;
-    }
-    
     public BufferedImage getSprite(){
-        return SPRITE_PER_LEVEL[level];
-    }
-
-
-    public Point getPosition(){
-        return position;
+        return sprite;
     }
 
     public int getSize(){
         return size;
+    }
+
+    public Point getPosition(){
+        return position;
     }
 
     public boolean getActivity(){
@@ -62,21 +55,13 @@ public abstract class GameObject {
         this.name = name;
     }
 
-    public void setLevel(int level){
-        if (level>=0){
-            this.level = level;
-        }
+    public void setSprite(BufferedImage sprite){
+        this.sprite = sprite;
     }
 
     public void setPosition(Point position){
         if (position.getX()>=0 && position.getY()>=0){
             this.position = position;
-        }
-    }
-
-    public void setSize(int size){
-        if (size>=0){
-            this.size = size;
         }
     }
 
@@ -87,6 +72,7 @@ public abstract class GameObject {
     public void setVisibility(boolean isVisible){
         this.isVisible = isVisible;
     }
+
 
     public abstract void draw(Graphics g);
 
