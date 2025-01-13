@@ -4,18 +4,19 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.awt.Image;
 
 public abstract class GameObject {
     //Instance variables
-    private final int size = 48;
+    private final static int SIZE = 64;
     private String name;
-    private BufferedImage sprite;
+    private Image sprite;
     private Point position; 
     private boolean isActive = false, isVisible = false;
     private static ArrayList<GameObject> activeGameObjects = new ArrayList<GameObject>();
 
     //Main constructor
-    public GameObject(String name, BufferedImage sprite, Point position, boolean isActive, boolean isVisible){
+    public GameObject(String name, Image sprite, Point position, boolean isActive, boolean isVisible){
         this.name = name;
         this.sprite = sprite;
         this.position = position;
@@ -29,12 +30,8 @@ public abstract class GameObject {
         return name;
     }
    
-    public BufferedImage getSprite(){
+    public Image getSprite(){
         return sprite;
-    }
-
-    public int getSize(){
-        return size;
     }
 
     public Point getPosition(){
@@ -49,13 +46,17 @@ public abstract class GameObject {
         return isVisible;
     }
 
+     public static int getSize(){
+            return SIZE;
+    }
+
     //Mutator Methods
 
     public void setName(String name){
         this.name = name;
     }
 
-    public void setSprite(BufferedImage sprite){
+    public void setSprite(Image sprite){
         this.sprite = sprite;
     }
 

@@ -51,6 +51,7 @@ public class Game extends JFrame implements Runnable{
     private Class<? extends Hooman> selectedHoomanType = null; // Track selected hooman type
     private ArrayList<Hooman> hoomans = new ArrayList<Hooman>(); // Store placed towers
  
+    Caveman test;
      
 
     //Main method
@@ -132,14 +133,14 @@ public class Game extends JFrame implements Runnable{
 
         //https://chatgpt.com/share/67786f4d-d214-800f-89bd-c28037dc9ea9
 
-        
+        test = new Caveman(new Point(100,100), true, true, gameScreen);
        
     }
 
     // Update method to be used for checking inputs and updating the changes in the actual game
     // Such as movement of aliens or projectile motion
     private void update(){
-        
+        test.attack();
     }
 
 

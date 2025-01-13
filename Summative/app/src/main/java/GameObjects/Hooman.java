@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.awt.Graphics;
 import Interfaces.Placeable;
+import java.awt.Image;
 
 
 
@@ -15,7 +16,7 @@ public abstract class Hooman extends GameObject implements Placeable{
     private ArrayList<Alien> targetAliens = new ArrayList<Alien>();
 
     //Constructor
-    public Hooman (String name, BufferedImage sprite, Point position, boolean isActive, boolean isVisible,
+    public Hooman (String name, Image sprite, Point position, boolean isActive, boolean isVisible,
                    int evolutionIndex, int damage, int range, int splash, int reloadSpeed, int cost){
         //Call to parent GameObject constructor
         super(name, sprite, position, isActive, isVisible);
@@ -99,17 +100,17 @@ public abstract class Hooman extends GameObject implements Placeable{
     public void attack(){
         // Perform game logic
         findTargetAliens();
-        if (getTargetAliens().isEmpty()) {
+        /**if (getTargetAliens().isEmpty()) {
             return;
-        }
+        }*/
 
         // Visual animation
         animateAttack();
 
         //Apply damage to target aliens
-        for (Alien alien : getTargetAliens()) {
+        /**for (Alien alien : getTargetAliens()) {
             alien.takeDamage(getDamage());
-        }
+        }*/
     }
 
 

@@ -77,7 +77,6 @@ public class ShopMenu extends JPanel{
         for (int i = 0; i<Hooman.getSortedHoomans().length/2; i++){
             Hooman hooman = Hooman.getSortedHoomans()[i];
             // Uses html tags to label the buttons with multiple lines of text
-            //JButton hoomanButton = new JButton("<html>"+hooman.getName()+"<br>"+hooman.getCost()+" Coins</html>", new ImageIcon(hooman.getSprite().getScaledInstance(32,32, Image.SCALE_AREA_AVERAGING)));
             JButton hoomanButton = new JButton();
             configureHoomanButton(hoomanButton, hooman);
             add(hoomanButton);
@@ -85,8 +84,6 @@ public class ShopMenu extends JPanel{
         add(sortButton);
         for (int i = Hooman.getSortedHoomans().length/2; i<Hooman.getSortedHoomans().length; i++){
             Hooman hooman = Hooman.getSortedHoomans()[i];
-            // Uses html tags to label the buttons with multiple lines of text
-            //JButton hoomanButton = new JButton("<html>"+hooman.getName()+"<br>"+hooman.getCost()+" Coins</html>", new ImageIcon(hooman.getSprite().getScaledInstance(32,32, Image.SCALE_AREA_AVERAGING)));
             JButton hoomanButton = new JButton();
             configureHoomanButton(hoomanButton, hooman);
             add(hoomanButton);
@@ -95,6 +92,7 @@ public class ShopMenu extends JPanel{
 
     private void configureHoomanButton(JButton hoomanButton, Hooman hooman) {
         hoomanButton.setPreferredSize(new Dimension(getWidth() / 7, getHeight() / 2));
+        // Uses html tags to label the buttons with multiple lines of text
         hoomanButton.setText("<html>"+hooman.getName()+"<br>"+hooman.getCost()+" Coins</html>");
         hoomanButton.setIcon(new ImageIcon(hooman.getSprite().getScaledInstance(32,32, Image.SCALE_AREA_AVERAGING)));
         hoomanButton.setOpaque(true);
@@ -111,20 +109,14 @@ public class ShopMenu extends JPanel{
         });
     }
 
-// Method called by default by repaint() that will essentially repaint the shop 
-   @Override
+    // Method called by default by repaint() that will essentially repaint the shop 
+    @Override
     public void paintComponent(Graphics g){
         // Drawing all child components of this
         super.paintComponent(g);
         // Drawing the background of the shop
         g.drawImage(background.getScaledInstance(getWidth(),getHeight(), Image.SCALE_SMOOTH ), 0, 0, getWidth(), getHeight(), null);
     }
-
-
-    
-
-    public void arrangeAZ(){}
-    public void arrangeCost(){}
 
     // Toggles the visibility of the shop based on whether its already visibleß
     public void toggleVisibility() {//Chatgpt

@@ -10,6 +10,8 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 import java.awt.Graphics;
 import javax.imageio.ImageIO;
+import java.awt.Graphics2D;
+import java.awt.Image;
 
 public class Caveman extends Hooman{
     
@@ -18,7 +20,8 @@ public class Caveman extends Hooman{
     private int swingAngle;
     
     private static final String NAME = "Caveman";
-    private static final BufferedImage SPRITE = importSprites()[0];
+    private static final Image SPRITE = importSprites()[0];
+    private static final Image WEAPON_SPRITE = importSprites()[1];
     private static final int EVOLUTION_INDEX = 0;
     private static final int DAMAGE = 20;
     private static final int RANGE = 20;
@@ -38,11 +41,13 @@ public class Caveman extends Hooman{
     }
 
     
-    private static BufferedImage[] importSprites() {
-        BufferedImage[] sprites = new BufferedImage[1];
+    private static Image[] importSprites() {
+        Image[] sprites = new Image[2];
         try{
             InputStream inputStream = Caveman.class.getResourceAsStream("/Resources/caveman.png");
             sprites[0] = ImageIO.read(inputStream);
+            inputStream = Caveman.class.getResourceAsStream("/Resources/cavemanClub.png");
+            sprites[1] = ImageIO.read(inputStream).getScaledInstance(getSize()/2,getSize()/2,Image.SCALE_AREA_AVERAGING);
         }
         catch(IOException e){
             e.printStackTrace();
@@ -57,7 +62,7 @@ public class Caveman extends Hooman{
             @Override
             public void actionPerformed(ActionEvent e) {
                 swingAngle += 15; // Increment swing angle
-                if (swingAngle > 90) { // Reset after full swing
+                if (swingAngle > 360) { // Reset after full swing
                     swingAngle = 0;
                     swingTimer.stop();
                 }
@@ -74,15 +79,22 @@ public class Caveman extends Hooman{
         if (getVisibility()){
             // Draw the Caveman
             g.drawImage(SPRITE, (int)(getPosition().getX()), (int)getPosition().getY(), getSize(), getSize(), null);
-
+            Graphics2D g2d = (Graphics2D) g;
             // Draw the sword swing (a simple line as an example)
             if (swingAngle > 0) {
-                int x1 = (int) getPosition().getX() + 10;
-                int y1 = (int) getPosition().getY() + 10;
-                int x2 = x1 + (int) (50 * Math.cos(Math.toRadians(swingAngle)));
-                int y2 = y1 - (int) (50 * Math.sin(Math.toRadians(swingAngle)));
-                g.setColor(Color.RED);
-                g.drawLine(x1, y1, x2, y2);
+                int x1 = (int) getPosition().getX() + 30;
+                int y1 = (int) getPosition().getY() + 30;
+                
+                // Set the pivot point for rotation at the base of the caveman
+                g2d.translate(x1, y1);
+                g2d.rotate(Math.toRadians(swingAngle)+Math.PI/2); // Rotate by the swing angle
+
+                // Draw the attack sprite (offset it by negative x1 and y1 after translation)
+                g2d.drawImage(WEAPON_SPRITE, WEAPON_SPRITE.getWidth(null) / 2, -WEAPON_SPRITE.getHeight(null) / 2 ,null);
+
+                // Reset the graphics transformations
+                g2d.rotate(-Math.toRadians(swingAngle));
+                g2d.translate(-x1, -y1);
             }
         }
     }
