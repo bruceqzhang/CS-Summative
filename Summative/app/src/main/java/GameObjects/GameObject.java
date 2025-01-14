@@ -46,8 +46,8 @@ public abstract class GameObject {
         return isVisible;
     }
 
-     public static int getSize(){
-            return SIZE;
+    public static int getSize(){
+        return SIZE;
     }
 
     //Mutator Methods

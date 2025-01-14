@@ -47,7 +47,7 @@ public class Caveman extends Hooman{
             InputStream inputStream = Caveman.class.getResourceAsStream("/Resources/caveman.png");
             sprites[0] = ImageIO.read(inputStream);
             inputStream = Caveman.class.getResourceAsStream("/Resources/cavemanClub.png");
-            sprites[1] = ImageIO.read(inputStream).getScaledInstance(getSize()/2,getSize()/2,Image.SCALE_AREA_AVERAGING);
+            sprites[1] = ImageIO.read(inputStream).getScaledInstance(getSize(),getSize(),Image.SCALE_AREA_AVERAGING);
         }
         catch(IOException e){
             e.printStackTrace();
@@ -58,7 +58,7 @@ public class Caveman extends Hooman{
 
     @Override
     public void animateAttack() {
-        swingTimer = new Timer(50, new ActionListener() {
+        swingTimer = new Timer(20, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 swingAngle += 15; // Increment swing angle
@@ -76,27 +76,26 @@ public class Caveman extends Hooman{
     @Override
     // Draw the Caveman and its attack animation
     public void draw(Graphics g) {
-        if (getVisibility()){
-            // Draw the Caveman
-            g.drawImage(SPRITE, (int)(getPosition().getX()), (int)getPosition().getY(), getSize(), getSize(), null);
-            Graphics2D g2d = (Graphics2D) g;
-            // Draw the sword swing (a simple line as an example)
-            if (swingAngle > 0) {
-                int x1 = (int) getPosition().getX() + 30;
-                int y1 = (int) getPosition().getY() + 30;
-                
-                // Set the pivot point for rotation at the base of the caveman
-                g2d.translate(x1, y1);
-                g2d.rotate(Math.toRadians(swingAngle)+Math.PI/2); // Rotate by the swing angle
+        // Draw the Caveman
+        g.drawImage(SPRITE, (int)(getPosition().getX()), (int)getPosition().getY(), getSize(), getSize(), null);
+        // Draw the club swing
+        if (swingAngle > 0) {
+            Graphics2D g2d = (Graphics2D) g.create();
+            int startX = (int) (getPosition().getX() + getSize()/2.0);
+            int startY = (int) (getPosition().getY() + getSize()/2.0);
+            
+            // Set the pivot point for rotation at the base of the caveman
+            g2d.translate(startX, startY);
+            // Rotate by the swing angle
+            g2d.rotate(Math.toRadians(swingAngle));
 
-                // Draw the attack sprite (offset it by negative x1 and y1 after translation)
-                g2d.drawImage(WEAPON_SPRITE, WEAPON_SPRITE.getWidth(null) / 2, -WEAPON_SPRITE.getHeight(null) / 2 ,null);
+            // Draw the attack weapon (offset it by negative startX and startY after translation)
+            g2d.drawImage(WEAPON_SPRITE, -WEAPON_SPRITE.getWidth(null) / 2, -WEAPON_SPRITE.getHeight(null) ,null);
 
-                // Reset the graphics transformations
-                g2d.rotate(-Math.toRadians(swingAngle));
-                g2d.translate(-x1, -y1);
-            }
+            // Reset the graphics transformations
+            g2d.dispose();
         }
+        
     }
     
 }

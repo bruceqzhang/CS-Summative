@@ -9,7 +9,9 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import GameObjects.Archer;
 import GameObjects.Caveman;
+import GameObjects.Farmer;
 import GameObjects.GameObject;
 import GameObjects.Hooman;
 
@@ -52,6 +54,8 @@ public class Game extends JFrame implements Runnable{
     private ArrayList<Hooman> hoomans = new ArrayList<Hooman>(); // Store placed towers
  
     Caveman test;
+    Farmer test1;
+    Archer test2;
      
 
     //Main method
@@ -127,13 +131,22 @@ public class Game extends JFrame implements Runnable{
         revalidate();
         repaint();
 
+
+        test = new Caveman(new Point(100,100), true, true, gameScreen);
+                
+        test1 = new Farmer(new Point(200,200), true, true, gameScreen);
+
+        test2 = new Archer(new Point (300,300), true, true, gameScreen);
+                
         //Starts gameThread
         gameThread = new Thread(this);
         gameThread.start();
 
         //https://chatgpt.com/share/67786f4d-d214-800f-89bd-c28037dc9ea9
 
-        test = new Caveman(new Point(100,100), true, true, gameScreen);
+        
+
+       
        
     }
 
@@ -141,6 +154,8 @@ public class Game extends JFrame implements Runnable{
     // Such as movement of aliens or projectile motion
     private void update(){
         test.attack();
+        test1.attack();
+        test2.attack();
     }
 
 
@@ -179,7 +194,7 @@ public class Game extends JFrame implements Runnable{
         try {
 
             Constructor <? extends Hooman> constructor = selectedHoomanType.getConstructor(Point.class, boolean.class, boolean.class, JPanel.class);
-            Hooman newHooman = constructor.newInstance(new Point((int)position.getX()-20, (int)position.getY()-50), true, true, gameScreen);
+            Hooman newHooman = constructor.newInstance(new Point((int)(position.getX()-GameObject.getSize()/2.0), (int)position.getY()-GameObject.getSize()), true, true, gameScreen);
             hoomans.add(newHooman);
 
             // Exit placement mode

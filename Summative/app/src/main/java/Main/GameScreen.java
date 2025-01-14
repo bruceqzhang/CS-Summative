@@ -50,10 +50,14 @@ public class GameScreen extends JPanel{
         //Draws the set path
         drawPath(g);
         for (Alien alien: Alien.getAliens()){
-            alien.draw(g);
+            if (alien.getVisibility()){
+                alien.draw(g);
+            }
         }
         for (Hooman hooman: Hooman.getHoomans()){
-            hooman.draw(g);
+            if(hooman.getVisibility()){
+                hooman.draw(g);
+            }
         }
         
 
@@ -137,6 +141,7 @@ public class GameScreen extends JPanel{
             g.drawImage(allTiles[14][4], x*32, yStart*32, 32,32, null);
         }
         for (int x = xStart; x<xStart+length; x++){
+            Alien.addWaypoint(xStart*32, (yStart+1)*32);
             g.drawImage(allTiles[14][6], x*32, (yStart+1)*32, 32,32, null);
         }
     }
@@ -146,23 +151,28 @@ public class GameScreen extends JPanel{
             g.drawImage(allTiles[13][5], xStart*32, y*32, 32,32, null);
         }
         for (int y = yStart; y<yStart+length; y++){
+            Alien.addWaypoint((xStart+1)*32, yStart*32);
             g.drawImage(allTiles[15][5], (xStart+1)*32, y*32, 32,32, null);
         }        
     }
 
     private void drawTopRight(Graphics g, int xStart, int yStart){
+        Alien.addWaypoint((xStart+1)*32, (yStart+1)*32);
         g.drawImage(tileSet.getSubimage(14*16, 4*16,32,32), xStart*32, yStart*32, 64,64,null);
     }
 
     private void drawTopLeft(Graphics g, int xStart, int yStart){
+        Alien.addWaypoint((xStart+1)*32, (yStart+1)*32);
         g.drawImage(tileSet.getSubimage(13*16, 4*16,32,32), xStart*32, yStart*32, 64,64,null);
     }
 
     private void drawBottomRight(Graphics g, int xStart, int yStart){
+        Alien.addWaypoint((xStart+1)*32, (yStart+1)*32);
         g.drawImage(tileSet.getSubimage(14*16, 5*16,32,32), xStart*32, yStart*32, 64,64,null);
     }
 
     private void drawBottomLeft(Graphics g, int xStart, int yStart){
+        Alien.addWaypoint((xStart+1)*32, (yStart+1)*32);
         g.drawImage(tileSet.getSubimage(13*16, 5*16,32,32), xStart*32, yStart*32, 64,64,null);
     }
 
