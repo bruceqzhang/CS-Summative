@@ -16,6 +16,9 @@ public class GameScreen extends JPanel{
     private BufferedImage[][] allTiles;
 
     private Game game;
+
+    private int waypointOffsetX;
+    private int waypointOffsetY;
     
     //Constructor
     public GameScreen(Game game, BufferedImage tileSet){
@@ -24,7 +27,7 @@ public class GameScreen extends JPanel{
         // Covers entire JFrame with gameScreen
         this.setBounds(0,0, game.getWidth(), game.getHeight());
         // Loads the GUI onto the window
-        game.add(this);
+        this.game.add(this);
         //Creates a 25x14 matrix array with every possibly individual tile from the imported tileset
         allTiles = new BufferedImage[25][14];
         for (int x = 0; x<25; x++){
@@ -35,6 +38,9 @@ public class GameScreen extends JPanel{
         //Sets the base tiles to be grass
         setGrassTiles();
         setRandomProps();
+
+        waypointOffsetX = -16;
+        waypointOffsetY = -16;
     }
     //Method to actually paint and draw out the GUI
     public void paintComponent(Graphics g){
@@ -118,7 +124,7 @@ public class GameScreen extends JPanel{
 
     //Draws the path
     private void drawPath(Graphics g){
-        Alien.addWaypoint(0, 128);
+        Alien.addWaypoint(0, 128+waypointOffsetY);
         drawHorizontal(g, 17, 0, 3);
         drawTopRight(g, 17, 3);
         drawVertical(g,2,17,5);
@@ -134,7 +140,7 @@ public class GameScreen extends JPanel{
         drawHorizontal(g, 6, 23, 3);
         drawTopRight(g,29,3);
         drawVertical(g, 15, 29, 5);
-        Alien.addWaypoint(960, 640);
+        Alien.addWaypoint(960+waypointOffsetX, 640+waypointOffsetY);
     }
 
     //Many helper methods designed to help draw the path; names are somewhat self-explanatory
@@ -160,22 +166,22 @@ public class GameScreen extends JPanel{
     }
 
     private void drawTopRight(Graphics g, int xStart, int yStart){
-        Alien.addWaypoint((xStart+1)*32, (yStart+1)*32);
+        Alien.addWaypoint((xStart+1)*32+waypointOffsetX, (yStart+1)*32+waypointOffsetY);
         g.drawImage(tileSet.getSubimage(14*16, 4*16,32,32), xStart*32, yStart*32, 64,64,null);
     }
 
     private void drawTopLeft(Graphics g, int xStart, int yStart){
-        Alien.addWaypoint((xStart+1)*32, (yStart+1)*32);
+        Alien.addWaypoint((xStart+1)*32+waypointOffsetX, (yStart+1)*32+waypointOffsetY);
         g.drawImage(tileSet.getSubimage(13*16, 4*16,32,32), xStart*32, yStart*32, 64,64,null);
     }
 
     private void drawBottomRight(Graphics g, int xStart, int yStart){
-        Alien.addWaypoint((xStart+1)*32, (yStart+1)*32);
+        Alien.addWaypoint((xStart+1)*32+waypointOffsetX, (yStart+1)*32+waypointOffsetY);
         g.drawImage(tileSet.getSubimage(14*16, 5*16,32,32), xStart*32, yStart*32, 64,64,null);
     }
 
     private void drawBottomLeft(Graphics g, int xStart, int yStart){
-        Alien.addWaypoint((xStart+1)*32, (yStart+1)*32);
+        Alien.addWaypoint((xStart+1)*32+waypointOffsetX, (yStart+1)*32+waypointOffsetY);
         g.drawImage(tileSet.getSubimage(13*16, 5*16,32,32), xStart*32, yStart*32, 64,64,null);
     }
 

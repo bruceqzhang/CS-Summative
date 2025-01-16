@@ -8,36 +8,71 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Currency;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import com.google.common.escape.ArrayBasedCharEscaper;
+import com.google.errorprone.annotations.OverridingMethodsMustInvokeSuper;
+
 import Interfaces.Downgradable;
 import Interfaces.Removable;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+
 public class Alien extends GameObject implements Downgradable, Removable{
     private static ArrayList<Alien> activeAliens = new ArrayList<Alien>();
-    private static final String[] NAME_PER_LEVEL = {};
+    private static final String[] NAME_PER_LEVEL = {"Hello"};
     private static final Image[] SPRITE_PER_LEVEL = importSprites();
     private static final int[] SPEED_PER_LEVEL ={5,7,10,15,15}, MAX_HEALTH_PER_LEVEL = {50,50,75,100,200};
     private static final ArrayList<Point> WAYPOINTS = new ArrayList<Point>();
+    private static final Point STARTING_POINT = new Point(0,112);
     private Timer moveTimer;
     private JPanel gameScreen;
-    
-    private int levelIndex;
-    private int speed, maxHealth, currentWaypointIndex, currentHealth;
+    private int levelIndex,speed, maxHealth, currentWaypointIndex, currentHealth;
+    private final int delay; 
+
+    private double progress;
 
     //Constructor
-    public Alien(String name, Image sprite, Point position, boolean isActive, boolean isVisible, int levelIndex, int currentWaypointIndex, JPanel gameScreen){
-        super(NAME_PER_LEVEL[levelIndex], SPRITE_PER_LEVEL[levelIndex], position, isActive, isVisible);
+    public Alien(boolean isActive, boolean isVisible, int levelIndex, int delay, JPanel gameScreen){
+        super(NAME_PER_LEVEL[levelIndex], SPRITE_PER_LEVEL[levelIndex], STARTING_POINT, isActive, isVisible);
         this.levelIndex = levelIndex;
         this.speed = SPEED_PER_LEVEL[levelIndex];
         this.maxHealth = MAX_HEALTH_PER_LEVEL[levelIndex];
-        this.currentWaypointIndex = currentWaypointIndex;
+        this.currentWaypointIndex = 0;
         this.gameScreen = gameScreen;
         currentHealth = maxHealth;
+        
+        progress = 0;
+        if (isActive){
+            addAlien(this);
+        }
+        this.delay = delay;
     }
+
+    public Alien(int levelIndex, int delay, JPanel gameScreen){
+        this(false,false,levelIndex,delay, gameScreen);
+        
+    }
+
+    public void initAlien(){
+        setActivity(true);
+        setVisibility(true);
+        //startMovement();
+    }
+
+    @Override
+    public void setActivity(boolean isActive){
+        super.setActivity(isActive);
+        if (isActive&&!getAliens().contains(this)){
+            addAlien(this);
+        }
+    }
+
 
     public int getLevelIndex(){
         return levelIndex;
@@ -57,6 +92,10 @@ public class Alien extends GameObject implements Downgradable, Removable{
 
     public int getCurrentWaypointIndex(){
         return currentWaypointIndex;
+    }
+
+    public int getDelay(){
+        return delay;
     }
 
     public void decrementLevelIndex(){
@@ -82,16 +121,16 @@ public class Alien extends GameObject implements Downgradable, Removable{
         }
     }
 
-    public void startMovement() {
-        moveTimer = new Timer(16, new ActionListener() { // Approx. 60 FPS
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                move(); // Call your move method
-                gameScreen.repaint(); // Trigger a redraw
-            }
-        });
-        moveTimer.start();
-    }
+    // public void startMovement() {
+    //     moveTimer = new Timer(16, new ActionListener() { // Approx. 60 FPS
+    //         @Override
+    //         public void actionPerformed(ActionEvent e) {
+    //             move(); // Call your move method
+    //             gameScreen.repaint(); // Trigger a redraw
+    //         }
+    //     });
+    //     moveTimer.start();
+    // }
 
     public void move(){
 
@@ -109,16 +148,20 @@ public class Alien extends GameObject implements Downgradable, Removable{
         int deltaX = (int)(nextWaypoint.getX() - currentPosition.getX());
         int deltaY = (int)(nextWaypoint.getY() - currentPosition.getY());
 
-        if (deltaX!=0){ 
+
+
+        if (deltaX!=0){
+            progress = Math.abs(deltaX); 
             setPosition(new Point(
-                (int) (currentPosition.getX()+ Math.min(getSpeed(), Math.abs(deltaX))*Integer.signum(deltaX)),
-                (int) currentPosition.getY()
+                (int) (currentPosition.getX()+ Math.min(getSpeed(), progress)*Integer.signum(deltaX)),
+                (int) currentPosition.getY() 
             ));
         }
         else if (deltaY!=0){
+            progress = Math.abs(deltaY); 
             setPosition(new Point(
                 (int) currentPosition.getX(),
-                (int) (currentPosition.getY()+ Math.min(getSpeed(), Math.abs(deltaY))*Integer.signum(deltaY))
+                (int) (currentPosition.getY()+ Math.min(getSpeed(), progress)*Integer.signum(deltaY))
             ));
         }
 
@@ -126,6 +169,10 @@ public class Alien extends GameObject implements Downgradable, Removable{
             updateCurrentWaypointIndex();
         }
 
+    }
+
+    public double getProgress(){
+        return progress;
     }
 
 
@@ -137,8 +184,7 @@ public class Alien extends GameObject implements Downgradable, Removable{
     }
 
     private void reachGoal() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'reachGoal'");
+        remove();
     }
 
     @Override
@@ -173,7 +219,7 @@ public class Alien extends GameObject implements Downgradable, Removable{
         try{
             InputStream inputStream = Alien.class.getResourceAsStream("/Resources/alienSpriteSheet.png");
             spriteSheet = ImageIO.read(inputStream);
-            sprites[0] = spriteSheet.getSubimage(12,12,64,64);
+            sprites[0] = spriteSheet.getSubimage(24,24,128,128).getScaledInstance(32,32,Image.SCALE_AREA_AVERAGING);
             sprites[1] = spriteSheet.getSubimage(12,12,64,64);
             sprites[2] = spriteSheet.getSubimage(12,12,64,64);
             sprites[3] = spriteSheet.getSubimage(12,12,64,64);
@@ -201,7 +247,39 @@ public class Alien extends GameObject implements Downgradable, Removable{
         activeAliens = aliens;
     }
 
-    
+    public static Alien[] getRoundAliens(int round, JPanel gameScreen){
+        
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("/TextFiles/Rounds.txt"));
+            String line = "";
+            boolean lineFound = false;
+            while(line!=null){
+                line = br.readLine();
+                if (line.startsWith("Round " + round)){
+                    lineFound = true;
+                    break;
+                }
+            }
+            if (lineFound){
+                line = br.readLine();
+                String[] alienText = line.split(",");
+                Alien[] roundAliens = new Alien[alienText.length];
+                for (int i = 0; i<alienText.length; i++){
+                    roundAliens[i] = new Alien(Integer.parseInt(alienText[i].split(":")[0]), Integer.parseInt(alienText[i].split(":")[1]), gameScreen);
+                }
+                return roundAliens;
+            }
+            //Possible else statement here for random aliens?
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+
+        
+
+    }
+
+
     public static void addWaypoint(int x, int y){
         WAYPOINTS.add(new Point(x,y));
     }

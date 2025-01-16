@@ -9,6 +9,9 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import org.checkerframework.checker.units.qual.A;
+
+import GameObjects.Alien;
 import GameObjects.Archer;
 import GameObjects.Caveman;
 import GameObjects.Farmer;
@@ -45,7 +48,8 @@ public class Game extends JFrame implements Runnable{
     private final double UPS = 60.0;
     private final double TIME_PER_UPDATE = 1000.0/UPS;
 
-    
+    private int round;
+    private Hooman[] savedHoomans;
     private int tileSize = 32;
 
     // Fields for hooman placement
@@ -56,6 +60,8 @@ public class Game extends JFrame implements Runnable{
     Caveman test;
     Farmer test1;
     Archer test2;
+    Alien test3;
+    Alien test4;
      
 
     //Main method
@@ -65,7 +71,13 @@ public class Game extends JFrame implements Runnable{
     }
 
     //Constructor
-    public Game() {
+    public Game(){
+        this(0,null);
+    }
+
+    public Game(int round, Hooman[] savedHoomans) {
+        this.round = round;
+        this.savedHoomans = savedHoomans;
         // Creates a 1280x640 px window
         setSize(tileSize*40, tileSize*20);
 
@@ -132,12 +144,18 @@ public class Game extends JFrame implements Runnable{
         repaint();
 
 
-        test = new Caveman(new Point(100,100), true, true, gameScreen);
+        // test = new Caveman(new Point(100,100), true, true, gameScreen);
                 
-        test1 = new Farmer(new Point(200,200), true, true, gameScreen);
+        // test1 = new Farmer(new Point(200,200), true, true, gameScreen);
 
-        test2 = new Archer(new Point (300,300), true, true, gameScreen);
-                
+        // test2 = new Archer(new Point (300,300), true, true, gameScreen);
+             
+        // test3 = new Alien(true,true,0,0,gameScreen);
+
+        // test4 = new Alien(true, true, 0,0, gameScreen);
+
+        loadRound();
+
         //Starts gameThread
         gameThread = new Thread(this);
         gameThread.start();
@@ -150,12 +168,37 @@ public class Game extends JFrame implements Runnable{
        
     }
 
+    private void loadRound() {
+        Alien[] roundAliens = Alien.getRoundAliens(round, gameScreen);
+        for (Alien alien : roundAliens){
+            alien.initAlien();
+            try {
+                Thread.sleep(alien.getDelay());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     // Update method to be used for checking inputs and updating the changes in the actual game
     // Such as movement of aliens or projectile motion
     private void update(){
-        test.attack();
-        test1.attack();
-        test2.attack();
+        for (Hooman hooman: Hooman.getHoomans()){
+            if (!hooman.getTargetAliens().isEmpty()){
+                hooman.attack();
+                try {
+                    Thread.sleep(hooman.getReloadSpeed());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    Thread.currentThread().interrupt();
+                }
+            }
+        
+        }
+        for (Alien alien: Alien.getAliens()){
+            alien.move();
+        }
+
     }
 
 

@@ -18,10 +18,11 @@ public class Archer extends Hooman{
     
     private Timer shootTimer;
     private int projectileDistance;
-
-    private JPanel gameScreen;
+    Thread animateThread;
+    boolean reloading;
     
-   
+    private JPanel gameScreen;
+
     
     // Global Constants for statistics and info
     private static final String NAME = "Archer";
@@ -32,7 +33,7 @@ public class Archer extends Hooman{
     private static final int PROJECTILE_SIZE = 64;
     private static final int EVOLUTION_INDEX = 3;
     private static final int DAMAGE = 40;
-    private static final int RANGE = 500;
+    private static final int RANGE = 350;
     private static final int SPLASH = 5;
     private static final int RELOAD_SPEED = 1000;
     private static final int COST = 100;
@@ -47,6 +48,7 @@ public class Archer extends Hooman{
         // Panel where the game is rendered
         this.gameScreen = gameScreen; 
         projectileDistance = 0;
+        reloading = false;
     }
 
     
@@ -68,31 +70,45 @@ public class Archer extends Hooman{
         return sprites;
     }
 
+    @Override
+    public void reload() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'reload'");
+    }
 
     @Override
     public void animateAttack() {
-        shootTimer = new Timer(30, new ActionListener() {
+        animateThread = new Thread(new Runnable() {
+            
             @Override
-            public void actionPerformed(ActionEvent e) {
-                // double deltaX = getTargetAliens().get(0).getPosition().getX() - getPosition().getX();
-                // double deltaY = getTargetAliens().get(0).getPosition().getY() - getPosition().getY();
-                // double totalDistance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
-                double totalDistance = 200;
-                // Increment projectile distance until max distance is reached
-                if (projectileDistance <= totalDistance) { 
-                    // Increment projectile distance
-                    projectileDistance += 20; 
+            public void run(){
+                while(true){
+                    findTargetAliens();
+                    if (getTargetAliens().isEmpty()) {
+                        projectileDistance = 0;
+                        gameScreen.repaint();
+                        return;
+                    }
+                    double deltaX = getTargetAliens().get(0).getPosition().getX() - getPosition().getX();
+                    double deltaY = getTargetAliens().get(0).getPosition().getY() - getPosition().getY();
+                    double totalDistance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+                
+                    // Increment projectile distance until max distance is reached
+                    if (projectileDistance <= totalDistance) { 
+                        // Increment projectile distance
+                        projectileDistance += 20; 
+                    }
+                    // Stop animation once its done
+                    else{
+                        projectileDistance = 0;
+                        shootTimer.stop();
+                    }
+                    // Trigger re-drawing of the panel
+                    gameScreen.repaint(); 
                 }
-                // Stop animation once its done
-                else{
-                    projectileDistance = 0;
-                    shootTimer.stop();
-                }
-                // Trigger re-drawing of the panel
-                gameScreen.repaint(); 
             }
         });
-        shootTimer.start();
+        animateThread.start();
         
     }
 
@@ -146,11 +162,12 @@ public class Archer extends Hooman{
             g2dProjectile.dispose();
 
 
-
-
         }
         
     }
+
+
+
     
 }
 

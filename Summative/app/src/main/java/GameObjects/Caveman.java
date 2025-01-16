@@ -24,8 +24,8 @@ public class Caveman extends Hooman{
     private static final Image WEAPON_SPRITE = importSprites()[1];
     private static final int EVOLUTION_INDEX = 0;
     private static final int DAMAGE = 20;
-    private static final int RANGE = 20;
-    private static final int SPLASH = 20;
+    private static final int RANGE = 100;
+    private static final int SPLASH = 100;
     private static final int RELOAD_SPEED = 1000;
     private static final int COST = 30;
     
@@ -61,6 +61,12 @@ public class Caveman extends Hooman{
         swingTimer = new Timer(20, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                findTargetAliens();
+                if (getTargetAliens().isEmpty()) {
+                    swingAngle = 0;
+                    gameScreen.repaint();
+                    return;
+                }
                 swingAngle += 15; // Increment swing angle
                 if (swingAngle > 360) { // Reset after full swing
                     swingAngle = 0;
@@ -96,6 +102,13 @@ public class Caveman extends Hooman{
             g2d.dispose();
         }
         
+    }
+
+
+    @Override
+    public void reload() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'reload'");
     }
     
 }

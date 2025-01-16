@@ -77,42 +77,50 @@ public abstract class Hooman extends GameObject implements Placeable{
     }
 
     public void findTargetAliens(){
+        targetAliens.clear();
         Alien furthestAlien = null;
-        double furthestAlienWaypoint = 0, deltaX, deltaY, distance;
+        double furthestAlienWaypointIndex = 0, furthestProgress = 0, deltaX, deltaY, distance;
         for (Alien alien : Alien.getAliens()){
             deltaX = alien.getPosition().getX()-getPosition().getX();
             deltaY = alien.getPosition().getY()-getPosition().getY();
             distance = Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2));
-            if (distance<=getRange() && alien.getCurrentWaypointIndex()>furthestAlienWaypoint){
+            if (distance<=getRange() && (alien.getCurrentWaypointIndex()>furthestAlienWaypointIndex)){
                 furthestAlien = alien;
-                furthestAlienWaypoint = alien.getCurrentWaypointIndex();
+                furthestAlienWaypointIndex = alien.getCurrentWaypointIndex();
+            }
+            else if (distance<=getRange() && alien.getCurrentWaypointIndex()==furthestAlienWaypointIndex && alien.getProgress()>furthestProgress){
+                furthestAlien = alien;
+                furthestAlienWaypointIndex = alien.getCurrentWaypointIndex();
+                furthestProgress = alien.getProgress();
             }
         }
-        for (Alien alien : Alien.getAliens()){
-            if (Math.abs(alien.getPosition().getX()-furthestAlien.getPosition().getX())<=getSplash()
-             && alien.getPosition().getY()-furthestAlien.getPosition().getY()<=getSplash()){
-                targetAliens.add(alien);
-            } 
+        if (furthestAlien!=null){
+            for (Alien alien : Alien.getAliens()){
+                if (Math.abs(alien.getPosition().getX()-furthestAlien.getPosition().getX())<=getSplash()
+                && alien.getPosition().getY()-furthestAlien.getPosition().getY()<=getSplash()){
+                    targetAliens.add(alien);
+                } 
+            }
         }
 
     }
 
     public void attack(){
-        // Perform game logic
         findTargetAliens();
-        /**if (getTargetAliens().isEmpty()) {
+        if (getTargetAliens().isEmpty()) {
             return;
-        }*/
+        }
 
         // Visual animation
         animateAttack();
 
         //Apply damage to target aliens
-        /**for (Alien alien : getTargetAliens()) {
-            alien.takeDamage(getDamage());
-        }*/
+        // for (Alien alien : getTargetAliens()) {
+        //     alien.takeDamage(getDamage());
+        // }
     }
 
+    public abstract void reload();
 
     public abstract void animateAttack();
 

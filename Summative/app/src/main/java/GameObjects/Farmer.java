@@ -27,7 +27,7 @@ public class Farmer extends Hooman{
     private static final int WEAPON_SIZE = 128;
     private static final int EVOLUTION_INDEX = 2;
     private static final int DAMAGE = 30;
-    private static final int RANGE = 40;
+    private static final int RANGE = 100;
     private static final int SPLASH = 5;
     private static final int RELOAD_SPEED = 500;
     private static final int COST = 100;
@@ -62,10 +62,16 @@ public class Farmer extends Hooman{
     @Override
     public void animateAttack() {
         stabTimer = new Timer(30, new ActionListener() {
-            boolean isStabbing = true;
+            
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                findTargetAliens();
+                if (getTargetAliens().isEmpty()) {
+                    stabDistance = 0;
+                    gameScreen.repaint();
+                    return;
+                }
+                boolean isStabbing = true;
                 // Increment stab distance until max distance is reached
                 if (stabDistance <= RANGE && isStabbing) { 
                     // Increment stab distance
@@ -101,10 +107,9 @@ public class Farmer extends Hooman{
         // Draw the club swing
         if (stabDistance > 0) {
             Graphics2D g2d = (Graphics2D) g.create();
-            // double deltaX = getTargetAliens().get(0).getPosition().getX() - getPosition().getX();
-            // double deltaY = getTargetAliens().get(0).getPosition().getY() - getPosition().getY();
-            // double rotateAngle = Math.atan2(deltaY,deltaX);
-            double rotateAngle = Math.PI;
+            double deltaX = getTargetAliens().get(0).getPosition().getX() - getPosition().getX();
+            double deltaY = getTargetAliens().get(0).getPosition().getY() - getPosition().getY();
+            double rotateAngle = Math.atan2(deltaY,deltaX);
             
 
 
@@ -127,6 +132,13 @@ public class Farmer extends Hooman{
             g2d.dispose();
         }
         
+    }
+
+
+    @Override
+    public void reload() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'reload'");
     }
     
 }
