@@ -19,6 +19,8 @@ public class GameScreen extends JPanel{
 
     private int waypointOffsetX;
     private int waypointOffsetY;
+    private int waypointCount;
+    private boolean maxWaypointsReached;
     
     //Constructor
     public GameScreen(Game game, BufferedImage tileSet){
@@ -41,8 +43,11 @@ public class GameScreen extends JPanel{
 
         waypointOffsetX = -16;
         waypointOffsetY = -16;
+        waypointCount = 0;
+        maxWaypointsReached = false;
     }
     //Method to actually paint and draw out the GUI
+    @Override
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         //Drawing each tile as a grass tile, and sometimes drawing a prop or object on top
@@ -66,7 +71,6 @@ public class GameScreen extends JPanel{
             }
         }
         
-        Alien.drawWaypoints(g);
 
     }
 
@@ -122,9 +126,13 @@ public class GameScreen extends JPanel{
         }
     }
 
+
     //Draws the path
     private void drawPath(Graphics g){
-        Alien.addWaypoint(0, 128+waypointOffsetY);
+        if (!maxWaypointsReached){
+            Alien.addWaypoint(0, 128+waypointOffsetY);
+            waypointCount++;
+        }
         drawHorizontal(g, 17, 0, 3);
         drawTopRight(g, 17, 3);
         drawVertical(g,2,17,5);
@@ -140,7 +148,11 @@ public class GameScreen extends JPanel{
         drawHorizontal(g, 6, 23, 3);
         drawTopRight(g,29,3);
         drawVertical(g, 15, 29, 5);
-        Alien.addWaypoint(960+waypointOffsetX, 640+waypointOffsetY);
+        if (!maxWaypointsReached){
+            Alien.addWaypoint(960+waypointOffsetX, 640+waypointOffsetY);
+            waypointCount++;
+        }
+        maxWaypointsReached = true;
     }
 
     //Many helper methods designed to help draw the path; names are somewhat self-explanatory
@@ -150,7 +162,6 @@ public class GameScreen extends JPanel{
             g.drawImage(allTiles[14][4], x*32, yStart*32, 32,32, null);
         }
         for (int x = xStart; x<xStart+length; x++){
-            //Alien.addWaypoint(xStart*32, (yStart+1)*32);
             g.drawImage(allTiles[14][6], x*32, (yStart+1)*32, 32,32, null);
         }
     }
@@ -160,28 +171,39 @@ public class GameScreen extends JPanel{
             g.drawImage(allTiles[13][5], xStart*32, y*32, 32,32, null);
         }
         for (int y = yStart; y<yStart+length; y++){
-            //Alien.addWaypoint((xStart+1)*32, yStart*32);
             g.drawImage(allTiles[15][5], (xStart+1)*32, y*32, 32,32, null);
         }        
     }
 
     private void drawTopRight(Graphics g, int xStart, int yStart){
-        Alien.addWaypoint((xStart+1)*32+waypointOffsetX, (yStart+1)*32+waypointOffsetY);
+        if (!maxWaypointsReached){
+            Alien.addWaypoint((xStart+1)*32+waypointOffsetX, (yStart+1)*32+waypointOffsetY);
+            waypointCount++;
+        }
         g.drawImage(tileSet.getSubimage(14*16, 4*16,32,32), xStart*32, yStart*32, 64,64,null);
     }
 
     private void drawTopLeft(Graphics g, int xStart, int yStart){
-        Alien.addWaypoint((xStart+1)*32+waypointOffsetX, (yStart+1)*32+waypointOffsetY);
+        if (!maxWaypointsReached){
+            Alien.addWaypoint((xStart+1)*32+waypointOffsetX, (yStart+1)*32+waypointOffsetY);
+            waypointCount++;
+        }
         g.drawImage(tileSet.getSubimage(13*16, 4*16,32,32), xStart*32, yStart*32, 64,64,null);
     }
 
     private void drawBottomRight(Graphics g, int xStart, int yStart){
-        Alien.addWaypoint((xStart+1)*32+waypointOffsetX, (yStart+1)*32+waypointOffsetY);
+        if (!maxWaypointsReached){
+            Alien.addWaypoint((xStart+1)*32+waypointOffsetX, (yStart+1)*32+waypointOffsetY);
+            waypointCount++;
+        }
         g.drawImage(tileSet.getSubimage(14*16, 5*16,32,32), xStart*32, yStart*32, 64,64,null);
     }
 
     private void drawBottomLeft(Graphics g, int xStart, int yStart){
-        Alien.addWaypoint((xStart+1)*32+waypointOffsetX, (yStart+1)*32+waypointOffsetY);
+        if (!maxWaypointsReached){
+            Alien.addWaypoint((xStart+1)*32+waypointOffsetX, (yStart+1)*32+waypointOffsetY);
+            waypointCount++;
+        }
         g.drawImage(tileSet.getSubimage(13*16, 5*16,32,32), xStart*32, yStart*32, 64,64,null);
     }
 

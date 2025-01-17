@@ -1,12 +1,9 @@
 package GameObjects;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.awt.Point;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.Color;
-import javax.swing.JPanel;
 import javax.swing.Timer;
 import java.awt.Graphics;
 import javax.imageio.ImageIO;
@@ -15,9 +12,8 @@ import java.awt.Image;
 
 public class Caveman extends Hooman{
     
-    private Timer swingTimer;
-    private JPanel gameScreen;
     private int swingAngle;
+    private Timer swingTimer;
     
     private static final String NAME = "Caveman";
     private static final Image SPRITE = importSprites()[0];
@@ -30,13 +26,11 @@ public class Caveman extends Hooman{
     private static final int COST = 30;
     
 
-    public Caveman(Point position, boolean isActive, boolean isVisible, JPanel gameScreen){
+    public Caveman(Point position, boolean isActive, boolean isVisible){
         super(NAME, SPRITE, position, isActive, isVisible,
         EVOLUTION_INDEX, DAMAGE, RANGE, SPLASH, RELOAD_SPEED, COST);
 
 
-        // Panel where the game is rendered
-        this.gameScreen = gameScreen; 
         swingAngle = 0;
     }
 
@@ -58,29 +52,36 @@ public class Caveman extends Hooman{
 
     @Override
     public void animateAttack() {
-        swingTimer = new Timer(20, new ActionListener() {
+      
+        if (getTargetAliens().isEmpty()) {
+            return;
+        }
+        swingAngle = 0;
+
+        swingTimer = new Timer(16, new ActionListener() {
+            
             @Override
             public void actionPerformed(ActionEvent e) {
-                findTargetAliens();
-                if (getTargetAliens().isEmpty()) {
-                    swingAngle = 0;
-                    gameScreen.repaint();
-                    return;
+                
+
+                if(swingAngle<=360){
+                    swingAngle += 30; // Increment swing angle
                 }
-                swingAngle += 15; // Increment swing angle
-                if (swingAngle > 360) { // Reset after full swing
+                else{
                     swingAngle = 0;
                     swingTimer.stop();
+                    ((Timer)e.getSource()).stop();
                 }
-                gameScreen.repaint(); // Trigger re-drawing of the panel
             }
         });
         swingTimer.start();
         
+        
     }
 
-    @Override
+    
     // Draw the Caveman and its attack animation
+    @Override
     public void draw(Graphics g) {
         // Draw the Caveman
         g.drawImage(SPRITE, (int)(getPosition().getX()), (int)getPosition().getY(), getSize(), getSize(), null);
@@ -105,10 +106,5 @@ public class Caveman extends Hooman{
     }
 
 
-    @Override
-    public void reload() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'reload'");
-    }
     
 }

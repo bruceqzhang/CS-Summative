@@ -3,28 +3,19 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-
-import org.checkerframework.checker.units.qual.A;
-
 import GameObjects.Alien;
 import GameObjects.Archer;
 import GameObjects.Caveman;
 import GameObjects.Farmer;
 import GameObjects.GameObject;
 import GameObjects.Hooman;
-
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.util.ArrayList;
-import java.awt.Component;
 import java.awt.Image;
-import java.awt.MediaTracker;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
@@ -32,6 +23,7 @@ import java.awt.event.MouseEvent;
 
 
 public class Game extends JFrame implements Runnable{
+    
     private GameScreen gameScreen;
     private ShopMenu shop;
     private JButton shopToggleButton;
@@ -41,27 +33,38 @@ public class Game extends JFrame implements Runnable{
     private Thread gameThread;
     private BufferedImage shopBackground;
 
-    private long previousTime;
-    private long currentTime;
-    private double accumulativeLag;
-    private double elapsed;
-    private final double UPS = 60.0;
-    private final double TIME_PER_UPDATE = 1000.0/UPS;
+    private final static double UPS = 60.0;
+    private final static double TIME_PER_UPDATE = 1000.0/UPS;
+
+    private final static double FPS = 60.0;
+    private final static double TIME_PER_FRAME = 1000.0/FPS;
+
+
+    private int lives;
+    private boolean gameOver;
 
     private int round;
     private Hooman[] savedHoomans;
+    private int coins;
     private int tileSize = 32;
+
+
+    private long lastAlienTime, currentAlienTime;
+    private int alienIndex;
+     
+    private Alien[] roundAliens;
 
     // Fields for hooman placement
     private boolean isPlacingHooman = false;
     private Class<? extends Hooman> selectedHoomanType = null; // Track selected hooman type
-    private ArrayList<Hooman> hoomans = new ArrayList<Hooman>(); // Store placed towers
+    private ArrayList<Hooman> pendingHoomans = new ArrayList<Hooman>(); // Store towers that need to be placed
  
     Caveman test;
     Farmer test1;
     Archer test2;
     Alien test3;
     Alien test4;
+   
      
 
     //Main method
@@ -72,12 +75,17 @@ public class Game extends JFrame implements Runnable{
 
     //Constructor
     public Game(){
-        this(0,null);
+        this(0,null, 100, 50);
     }
 
-    public Game(int round, Hooman[] savedHoomans) {
+    public Game(int round, Hooman[] savedHoomans, int lives, int coins) {
         this.round = round;
         this.savedHoomans = savedHoomans;
+        this.lives = lives;
+        this.coins = coins;
+
+        gameOver = false;
+
         // Creates a 1280x640 px window
         setSize(tileSize*40, tileSize*20);
 
@@ -144,15 +152,15 @@ public class Game extends JFrame implements Runnable{
         repaint();
 
 
-        // test = new Caveman(new Point(100,100), true, true, gameScreen);
+        test = new Caveman(new Point(100,100), true, true);
                 
-        // test1 = new Farmer(new Point(200,200), true, true, gameScreen);
+        test1 = new Farmer(new Point(200,200), true, true);
 
-        // test2 = new Archer(new Point (300,300), true, true, gameScreen);
+        test2 = new Archer(new Point (300,300), true, true);
              
-        // test3 = new Alien(true,true,0,0,gameScreen);
+        test3 = new Alien(true,true,0,0);
 
-        // test4 = new Alien(true, true, 0,0, gameScreen);
+        test4 = new Alien(true, true, 0,0);
 
         loadRound();
 
@@ -168,36 +176,69 @@ public class Game extends JFrame implements Runnable{
        
     }
 
-    private void loadRound() {
-        Alien[] roundAliens = Alien.getRoundAliens(round, gameScreen);
-        for (Alien alien : roundAliens){
-            alien.initAlien();
-            try {
-                Thread.sleep(alien.getDelay());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+    public void loseLives(int livesToLose){
+        lives-=livesToLose;
+        if (lives<=0){
+            gameOver = true;
         }
+    }
+
+    private void loadRound() {
+        alienIndex = 0;
+        lastAlienTime = System.currentTimeMillis();
+        roundAliens = Alien.getRoundAliens(round);
     }
 
     // Update method to be used for checking inputs and updating the changes in the actual game
     // Such as movement of aliens or projectile motion
     private void update(){
+
+        
+        long currentTime = System.currentTimeMillis();
         for (Hooman hooman: Hooman.getHoomans()){
-            if (!hooman.getTargetAliens().isEmpty()){
+            if(currentTime-hooman.getLastAttackTime()>=hooman.getReloadSpeed()){
+                hooman.findTargetAliens();
                 hooman.attack();
-                try {
-                    Thread.sleep(hooman.getReloadSpeed());
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    Thread.currentThread().interrupt();
-                }
             }
+            
         
         }
+
+
+        if (!pendingHoomans.isEmpty()){
+            Hooman.addHoomans(pendingHoomans);
+            pendingHoomans.clear();
+        }
+
+
+        if (alienIndex<roundAliens.length){
+            currentAlienTime = System.currentTimeMillis();
+            if (currentAlienTime - lastAlienTime>= roundAliens[alienIndex].getDelay()){
+                roundAliens[alienIndex].initAlien();
+                alienIndex++;
+                lastAlienTime = System.currentTimeMillis();
+            }
+        }
+
+
+        ArrayList<Alien> activeAliens = new ArrayList<Alien>();
         for (Alien alien: Alien.getAliens()){
             alien.move();
+            if (alien.getReachedGoal()){
+                loseLives(alien.getLevelIndex()+1);
+            }
+            if (!alien.getBeingRemoved()){
+                activeAliens.add(alien);
+            }
         }
+        Alien.setAliens(activeAliens);
+
+        
+        // if (roundIsFinished){
+        //     roundIsFinished = false;
+        //     round++;
+        //     loadRound();
+        // }
 
     }
 
@@ -236,9 +277,9 @@ public class Game extends JFrame implements Runnable{
     private void placeHooman(Point position) {
         try {
 
-            Constructor <? extends Hooman> constructor = selectedHoomanType.getConstructor(Point.class, boolean.class, boolean.class, JPanel.class);
-            Hooman newHooman = constructor.newInstance(new Point((int)(position.getX()-GameObject.getSize()/2.0), (int)position.getY()-GameObject.getSize()), true, true, gameScreen);
-            hoomans.add(newHooman);
+            Constructor <? extends Hooman> constructor = selectedHoomanType.getConstructor(Point.class, boolean.class, boolean.class);
+            Hooman newHooman = constructor.newInstance(new Point((int)(position.getX()-GameObject.getSize()/2.0), (int)position.getY()-GameObject.getSize()), true, true);
+            pendingHoomans.add(newHooman);
 
             // Exit placement mode
             isPlacingHooman = false;
@@ -254,49 +295,56 @@ public class Game extends JFrame implements Runnable{
     //Runnable method
     @Override
     public void run() {
+
+        long lastRepaintTime = System.currentTimeMillis(), lastUpdateTime = System.currentTimeMillis();
+        long currentRepaintTime, currentUpdateTime;
+        long updateTimeElapsed, repaintTimeElapsed;
+        long accumulativeUpdateLag = 0;
         
-        accumulativeLag = 0;
-        previousTime = System.currentTimeMillis();
+        lastRepaintTime = System.currentTimeMillis();
+
 
         //Game loop that updates and renders the game whilst keeping lag to a minimum
         while (true) {
 
             // Finds the time elapsed and adds it to the accumulativeLag
-            manageTime();
+            currentUpdateTime = System.currentTimeMillis();
+            updateTimeElapsed = currentUpdateTime-lastUpdateTime;
+            accumulativeUpdateLag+= updateTimeElapsed;
+            lastUpdateTime = System.currentTimeMillis();
+
+
 
             // Since the game should run at UPS, if the total time elapsed is greater
             // than the TIME_PER_UPDATE, then update and adjust the acumulated time and lag
 
-            while (accumulativeLag>= TIME_PER_UPDATE) {
+            while (accumulativeUpdateLag>= TIME_PER_UPDATE) {
                 // Updates the game
                 update();
                 //Adjusts acumulativeLag
-                accumulativeLag-=TIME_PER_UPDATE;
+                accumulativeUpdateLag-=TIME_PER_UPDATE;
             }
 
-            // Repaints the entire frame
-            repaint();
+            currentRepaintTime = System.currentTimeMillis();
+            repaintTimeElapsed = currentRepaintTime - lastRepaintTime;
+            
+            
+            // Repaint at 60 FPS
+            if (repaintTimeElapsed >= TIME_PER_FRAME) {
+                repaint();
+                lastRepaintTime = System.currentTimeMillis();
+            }
 
             //Trys to sleep as much as possible to reduce CPU utilisation
-            sleep(1);
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             
         }
     }
 
-    // Helped method that finds the time elapsed and adds it to the accumulativeLag
-    private void manageTime(){
-        currentTime = System.currentTimeMillis();
-        elapsed = currentTime-previousTime;
-        accumulativeLag+= elapsed;
-        previousTime = System.currentTimeMillis();
-    }
 
-    // Helper method to sleep as much as possible to reduce CPU utilisation
-    private void sleep(int millis){
-        try {
-            Thread.sleep(millis);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
+
 }

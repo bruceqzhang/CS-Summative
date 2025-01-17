@@ -1,13 +1,7 @@
 package GameObjects;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.awt.Point;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.Color;
-import javax.swing.JPanel;
-import javax.swing.Timer;
 import java.awt.Graphics;
 import javax.imageio.ImageIO;
 import java.awt.Graphics2D;
@@ -15,8 +9,6 @@ import java.awt.Image;
 
 public class Farmer extends Hooman{
     
-    private Timer stabTimer;
-    private JPanel gameScreen;
     private int stabDistance;
    
     
@@ -34,13 +26,10 @@ public class Farmer extends Hooman{
     
 
     // Constructor
-    public Farmer(Point position, boolean isActive, boolean isVisible, JPanel gameScreen){
+    public Farmer(Point position, boolean isActive, boolean isVisible){
         super(NAME, SPRITE, position, isActive, isVisible,
         EVOLUTION_INDEX, DAMAGE, RANGE, SPLASH, RELOAD_SPEED, COST);
 
-
-        // Panel where the game is rendered
-        this.gameScreen = gameScreen; 
     }
 
     
@@ -50,7 +39,7 @@ public class Farmer extends Hooman{
             InputStream inputStream = Caveman.class.getResourceAsStream("/Resources/farmer.png");
             sprites[0] = ImageIO.read(inputStream);
             inputStream = Caveman.class.getResourceAsStream("/Resources/farmerPitchfork.png");
-            sprites[1] = ImageIO.read(inputStream).getScaledInstance(WEAPON_SIZE,WEAPON_SIZE,Image.SCALE_AREA_AVERAGING);//???
+            sprites[1] = ImageIO.read(inputStream).getScaledInstance(WEAPON_SIZE,WEAPON_SIZE,Image.SCALE_AREA_AVERAGING);
         }
         catch(IOException e){
             e.printStackTrace();
@@ -61,38 +50,37 @@ public class Farmer extends Hooman{
 
     @Override
     public void animateAttack() {
-        stabTimer = new Timer(30, new ActionListener() {
+        new Thread( new Runnable() {
             
             @Override
-            public void actionPerformed(ActionEvent e) {
-                findTargetAliens();
-                if (getTargetAliens().isEmpty()) {
-                    stabDistance = 0;
-                    gameScreen.repaint();
-                    return;
+            public void run() {
+                while(true){
+                    // findTargetAliens();
+                    // if (getTargetAliens().isEmpty()) {
+                    //     stabDistance = 0;
+                    //     return;
+                    // }
+                    boolean isStabbing = true;
+                    // Increment stab distance until max distance is reached
+                    if (stabDistance <= RANGE && isStabbing) { 
+                        // Increment stab distance
+                        stabDistance += 5; 
+                    }
+                    // Decrement stab distance once max distance is reached
+                    else if (stabDistance>=0){
+                        // Stop incrementation 
+                        isStabbing = false;
+                        // Decrement stab distance
+                        stabDistance -= 5;
+                    }
+                    // Stop animation once its done
+                    else{
+                        return;
+                    }
                 }
-                boolean isStabbing = true;
-                // Increment stab distance until max distance is reached
-                if (stabDistance <= RANGE && isStabbing) { 
-                    // Increment stab distance
-                    stabDistance += 5; 
-                }
-                // Decrement stab distance once max distance is reached
-                else if (stabDistance>=0){
-                    // Stop incrementation 
-                    isStabbing = false;
-                    // Decrement stab distance
-                    stabDistance -= 5;
-                }
-                // Stop animation once its done
-                else{
-                    stabTimer.stop();
-                }
-                // Trigger re-drawing of the panel
-                gameScreen.repaint(); 
+
             }
-        });
-        stabTimer.start();
+        }).start();
         
     }
 
@@ -135,10 +123,6 @@ public class Farmer extends Hooman{
     }
 
 
-    @Override
-    public void reload() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'reload'");
-    }
+
     
 }
