@@ -19,21 +19,21 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 
-import java.awt.image.BufferedImage;
 import java.awt.GridLayout;
 
 
 public class ShopMenu extends JPanel{
     private int coins;
-    private BufferedImage background;
+    private Image background;
     private Game game;
     private JButton sortButton;
     
 
     // Constructor
-    public ShopMenu(Game game, BufferedImage background){
-        this.background = background;
+    public ShopMenu(Game game, Image background){
         this.game = game;
+
+
         // Setting the shop bounds 
         this.setBounds(0, (int)(3/4.0 * game.getHeight()), game.getWidth(),(int)(1/4.0*game.getHeight()));
 
@@ -42,6 +42,9 @@ public class ShopMenu extends JPanel{
 
         // Adds the shop to the JFrame
         game.add(this);
+
+        this.background = background.getScaledInstance(getWidth(),getHeight(), Image.SCALE_SMOOTH);
+
         // Making the shop invisible at the start
         setVisible(false);
 
@@ -115,7 +118,7 @@ public class ShopMenu extends JPanel{
         // Drawing all child components of this
         super.paintComponent(g);
         // Drawing the background of the shop
-        g.drawImage(background.getScaledInstance(getWidth(),getHeight(), Image.SCALE_SMOOTH ), 0, 0, getWidth(), getHeight(), null);
+        g.drawImage(background, 0, 0, null);
     }
 
     // Toggles the visibility of the shop based on whether its already visibleß

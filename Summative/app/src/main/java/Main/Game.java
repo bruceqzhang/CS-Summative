@@ -14,12 +14,15 @@ import GameObjects.Hooman;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import java.util.ArrayList;
+import java.awt.Color;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.SwingConstants;
 
 
 public class Game extends JFrame implements Runnable{
@@ -27,13 +30,19 @@ public class Game extends JFrame implements Runnable{
     private GameScreen gameScreen;
     private ShopMenu shop;
     private JButton shopToggleButton;
+    private JLabel livesLabel;
+    private JLabel roundLabel;
+    private JLabel coinsLabel;
 
     private BufferedImage tileSet;
     private Icon toggleShopButtonIcon;
+    private Icon livesLabelIcon;
+    private Icon roundLabelIcon;
+    private Icon coinsLabelIcon;
     private Thread gameThread;
     private BufferedImage shopBackground;
 
-    private final static double UPS = 60.0;
+    private final static double UPS = 120.0;
     private final static double TIME_PER_UPDATE = 1000.0/UPS;
 
     private final static double FPS = 60.0;
@@ -137,10 +146,29 @@ public class Game extends JFrame implements Runnable{
             }
         });
 
-        
+        roundLabel = new JLabel(""+round, roundLabelIcon, SwingConstants.LEFT );
+        roundLabel.setBounds(0, 0, 128, 64);
+        roundLabel.setOpaque(false);
+        roundLabel.setBackground(new Color(0,0,0,127));
+        add(roundLabel);
+
+        livesLabel = new JLabel(""+lives, livesLabelIcon, SwingConstants.LEFT );
+        livesLabel.setBounds(0, 64, 128, 64);
+        add(livesLabel);
+
+        coinsLabel = new JLabel(""+coins, coinsLabelIcon, SwingConstants.LEFT );
+        coinsLabel.setBounds(0, 128, 128, 64);
+        add(coinsLabel);
+    
+
+
         //Sets the order of each component on the content pane
-        getContentPane().setComponentZOrder(gameScreen, 2);//Chatgpt
-        getContentPane().setComponentZOrder(shop, 1);
+
+        getContentPane().setComponentZOrder(gameScreen, 5);//Chatgpt
+        getContentPane().setComponentZOrder(shop, 4);
+        getContentPane().setComponentZOrder(roundLabel, 3);
+        getContentPane().setComponentZOrder(livesLabel, 2);
+        getContentPane().setComponentZOrder(coinsLabel, 1);
         getContentPane().setComponentZOrder(shopToggleButton, 0);
         
 
@@ -150,17 +178,6 @@ public class Game extends JFrame implements Runnable{
         // Making sure that everything is displayed properly
         revalidate();
         repaint();
-
-
-        test = new Caveman(new Point(100,100), true, true);
-                
-        test1 = new Farmer(new Point(200,200), true, true);
-
-        test2 = new Archer(new Point (300,300), true, true);
-             
-        test3 = new Alien(true,true,0,0);
-
-        test4 = new Alien(true, true, 0,0);
 
         loadRound();
 
@@ -178,6 +195,7 @@ public class Game extends JFrame implements Runnable{
 
     public void loseLives(int livesToLose){
         lives-=livesToLose;
+        
         if (lives<=0){
             gameOver = true;
         }
@@ -255,14 +273,17 @@ public class Game extends JFrame implements Runnable{
             inputStream = getClass().getResourceAsStream("/Resources/shopBackground.png");
             shopBackground = ImageIO.read(inputStream);
 
+
         } catch (IOException e) {
             e.printStackTrace();
         } 
 
 
         // Scales the icon to match the size of the button
-        Image scaledShopImage = new ImageIcon("Summative/app/src/main/java/Resources/shopButton.png").getImage().getScaledInstance((int)(0.075*getWidth()),(int)(0.05*getHeight()), Image.SCALE_SMOOTH);
-        toggleShopButtonIcon = new ImageIcon(scaledShopImage); 
+        toggleShopButtonIcon = new ImageIcon(new ImageIcon("Summative/app/src/main/java/Resources/shopButton.png").getImage().getScaledInstance((int)(0.075*getWidth()),(int)(0.05*getHeight()), Image.SCALE_SMOOTH)); 
+        livesLabelIcon = new ImageIcon(new ImageIcon("Summative/app/src/main/java/Resources/livesLabel.png").getImage().getScaledInstance((int)(0.075*getWidth()),(int)(0.05*getHeight()), Image.SCALE_SMOOTH));
+        roundLabelIcon = new ImageIcon(new ImageIcon("Summative/app/src/main/java/Resources/roundLabel.png").getImage().getScaledInstance((int)(0.075*getWidth()),(int)(0.05*getHeight()), Image.SCALE_SMOOTH));
+        coinsLabelIcon = new ImageIcon(new ImageIcon("Summative/app/src/main/java/Resources/coinsLabel.png").getImage().getScaledInstance((int)(0.075*getWidth()),(int)(0.05*getHeight()), Image.SCALE_SMOOTH));
 
 
     }

@@ -27,7 +27,7 @@ public class Archer extends Hooman{
     private static final int DAMAGE = 40;
     private static final int RANGE = 500;
     private static final int SPLASH = 5;
-    private static final int RELOAD_SPEED = 1000;
+    private static final int RELOAD_SPEED = 2000;
     private static final int COST = 100;
     
 
@@ -63,7 +63,7 @@ public class Archer extends Hooman{
 
     @Override
     public void animateAttack() {
-       
+        findTargetAliens();
         if (getTargetAliens().isEmpty()) {
             return;
         }
@@ -74,14 +74,14 @@ public class Archer extends Hooman{
         double deltaY = getTargetAliens().get(0).getPosition().getY() - getPosition().getY();
         double totalDistance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
 
-        shootTimer = new Timer(16, new ActionListener(){
+        shootTimer = new Timer(8, new ActionListener(){
 
             @Override
             public void actionPerformed(ActionEvent e){
                 // Increment projectile distance until max distance is reached
                 if (projectileDistance <= totalDistance){
                     // Increment projectile distance
-                    projectileDistance += 40;
+                    projectileDistance += 15;
                 }
                 else{
                     // Stop animation once its done                 

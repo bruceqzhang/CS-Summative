@@ -19,7 +19,7 @@ public class Alien extends GameObject implements Downgradable, Removable{
     private static final Point STARTING_POINT = new Point(0,112);
     private static final String[] NAME_PER_LEVEL = {"Crawler","Stinger","Shell", "Gloop", "Bloble"};
     private static final Image[] SPRITE_PER_LEVEL = importSprites();
-    private static final int[] SPEED_PER_LEVEL ={5,7,5,15,15}, MAX_HEALTH_PER_LEVEL = {50,50,150,100,200};
+    private static final int[] SPEED_PER_LEVEL ={2,4,2,7,8}, MAX_HEALTH_PER_LEVEL = {50,50,150,100,200};
     
     private boolean reachedGoal, beingRemoved;
     private int levelIndex,speed, maxHealth, currentWaypointIndex, currentHealth;
@@ -145,17 +145,17 @@ public class Alien extends GameObject implements Downgradable, Removable{
 
 
         if (deltaX!=0){
-            progress = Math.abs(deltaX); 
+            progress = WAYPOINTS.get(currentWaypointIndex).getX() - nextWaypoint.getX() - Math.abs(deltaX); 
             setPosition(new Point(
-                (int) (currentPosition.getX()+ Math.min(getSpeed(), progress)*Integer.signum(deltaX)),
+                (int) (currentPosition.getX()+ Math.min(getSpeed(), Math.abs(deltaX))*Integer.signum(deltaX)),
                 (int) currentPosition.getY() 
             ));
         }
         else if (deltaY!=0){
-            progress = Math.abs(deltaY); 
+            progress = WAYPOINTS.get(currentWaypointIndex).getY() - nextWaypoint.getY() - Math.abs(deltaY); 
             setPosition(new Point(
                 (int) currentPosition.getX(),
-                (int) (currentPosition.getY()+ Math.min(getSpeed(), progress)*Integer.signum(deltaY))
+                (int) (currentPosition.getY()+ Math.min(getSpeed(), Math.abs(deltaY))*Integer.signum(deltaY))
             ));
         }
 
@@ -243,7 +243,7 @@ public class Alien extends GameObject implements Downgradable, Removable{
             }
             br.close();
             //Possible else statement here for random aliens?
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return null;

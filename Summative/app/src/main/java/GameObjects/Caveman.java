@@ -65,7 +65,7 @@ public class Caveman extends Hooman{
                 
 
                 if(swingAngle<=360){
-                    swingAngle += 30; // Increment swing angle
+                    swingAngle += 40; // Increment swing angle
                 }
                 else{
                     swingAngle = 0;

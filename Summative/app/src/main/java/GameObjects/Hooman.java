@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import java.awt.Graphics;
 import Interfaces.Placeable;
 import java.awt.Image;
-import java.util.Arrays;
 
-import com.google.common.escape.ArrayBasedCharEscaper;
 
 
 
@@ -16,16 +14,14 @@ public abstract class Hooman extends GameObject implements Placeable{
     private static Hooman[] sortedHoomans = {new Caveman(new Point(), false, false), new Archer(new Point(), false, false), new Farmer(new Point(), false, false), new Caveman(new Point(), false, false), new Caveman(new Point(), false, false), new Caveman(new Point(), false, false), new Caveman(new Point(), false, false), new Caveman(new Point(), false, false), new Caveman(new Point(), false, false), new Caveman(new Point(), false, false), new Caveman(new Point(), false, false), new Caveman(new Point(), false, false)};
     private static int currentSortType;
     private final int evolutionIndex, damage, range, splash, reloadSpeed, cost;
-    private boolean beingPlaced;
     private long lastAttackTime;
     private ArrayList<Alien> targetAliens = new ArrayList<Alien>();
 
     //Constructor
     public Hooman (String name, Image sprite, Point position, boolean isActive, boolean isVisible, 
-                   /*boolean beingPlaced,*/  int evolutionIndex, int damage, int range, int splash, int reloadSpeed, int cost){
+                  int evolutionIndex, int damage, int range, int splash, int reloadSpeed, int cost){
         //Call to parent GameObject constructor
         super(name, sprite, position, isActive, isVisible);
-        this.beingPlaced = beingPlaced;
         this.evolutionIndex = evolutionIndex;
         this.damage = damage;
         this.range = range;
@@ -41,9 +37,6 @@ public abstract class Hooman extends GameObject implements Placeable{
 
     //Accessor Methods
 
-    public boolean getBeingPlaced(){
-        return beingPlaced;
-    }
 
     public int getEvolutionIndex(){
         return evolutionIndex;
@@ -78,15 +71,15 @@ public abstract class Hooman extends GameObject implements Placeable{
         return targetAliens;
     }
 
-    private int compareToAZ(Hooman hooman){
+    private int compareAlphabeticTo(Hooman hooman){
         return getName().compareTo(hooman.getName());
     }
 
-    private int compareToCost(Hooman hooman){
+    private int compareCostTo(Hooman hooman){
         return getCost()-hooman.getCost();
     }
 
-    private int compareToEvolution(Hooman hooman){
+    private int compareEvolutionTo(Hooman hooman){
         return getEvolutionIndex() - hooman.getEvolutionIndex();
     }
 
