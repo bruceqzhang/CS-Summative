@@ -1,13 +1,15 @@
 package Main;
 import java.awt.Graphics;
+
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
-import java.util.ArrayList;
 
 import GameObjects.Alien;
-import GameObjects.GameObject;
 import GameObjects.Hooman;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class GameScreen extends JPanel{
     private BufferedImage tileSet;
@@ -23,8 +25,8 @@ public class GameScreen extends JPanel{
     private boolean maxWaypointsReached;
     
     //Constructor
-    public GameScreen(Game game, BufferedImage tileSet){
-        this.tileSet = tileSet;
+    public GameScreen(Game game){
+        importResources();
         this.game = game;
         // Covers entire JFrame with gameScreen
         this.setBounds(0,0, game.getWidth(), game.getHeight());
@@ -205,6 +207,21 @@ public class GameScreen extends JPanel{
             waypointCount++;
         }
         g.drawImage(tileSet.getSubimage(13*16, 5*16,32,32), xStart*32, yStart*32, 64,64,null);
+    }
+
+    // Imports the required resources
+    private void importResources() {
+        // Retrieves the filepath of the image and reads it with a stream of bytes
+        // and then converts the stream into a bufferedImage
+        try {
+            InputStream inputStream = getClass().getResourceAsStream("/Resources/tileset.png");
+            tileSet = ImageIO.read(inputStream);
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } 
+
     }
 
 }

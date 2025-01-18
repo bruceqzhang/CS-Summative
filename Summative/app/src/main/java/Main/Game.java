@@ -1,9 +1,6 @@
 package Main;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.*;
 import java.lang.reflect.Constructor;
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import GameObjects.Alien;
 import GameObjects.Archer;
@@ -11,36 +8,24 @@ import GameObjects.Caveman;
 import GameObjects.Farmer;
 import GameObjects.GameObject;
 import GameObjects.Hooman;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
 import java.util.ArrayList;
-import java.awt.Color;
-import java.awt.Image;
+import java.awt.Dimension;
+import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.SwingConstants;
 
 
 public class Game extends JFrame implements Runnable{
     
     private GameScreen gameScreen;
     private ShopMenu shop;
-    private JButton shopToggleButton;
-    private JLabel livesLabel;
-    private JLabel roundLabel;
-    private JLabel coinsLabel;
+    private SidePanel sidePanel;
 
-    private BufferedImage tileSet;
-    private Icon toggleShopButtonIcon;
-    private Icon livesLabelIcon;
-    private Icon roundLabelIcon;
-    private Icon coinsLabelIcon;
     private Thread gameThread;
-    private BufferedImage shopBackground;
+    private Insets insets;
+
 
     private final static double UPS = 120.0;
     private final static double TIME_PER_UPDATE = 1000.0/UPS;
@@ -92,20 +77,23 @@ public class Game extends JFrame implements Runnable{
         this.savedHoomans = savedHoomans;
         this.lives = lives;
         this.coins = coins;
-
+        insets = getInsets();
         gameOver = false;
 
         // Creates a 1280x640 px window
-        setSize(tileSize*40, tileSize*20);
+        setPreferredSize(new Dimension(tileSize * 40, tileSize * 20));
+        pack();
+        setVisible(true);
 
-        // Gets the bufferedImage of the image resource
-        importImages();
+        
+        int width = tileSize * 40 + insets.left + insets.right;
+        int height = tileSize * 20 + insets.top + insets.bottom;
+        setSize(width, height);
 
         // Closes the program when the user closes the window
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        // Makes window resizable
-        setResizable(true);
+        
         // Window is placed at the centre of the screen
         setLocationRelativeTo(null);
         // Removes any layouts and forces every component to have bounds
@@ -113,18 +101,15 @@ public class Game extends JFrame implements Runnable{
 
 
         // Creates the game screen GUI object
-        gameScreen = new GameScreen(this, tileSet);
+        gameScreen = new GameScreen(this);
 
         // Initializing the shop
-        shop = new ShopMenu(this, shopBackground);
+        shop = new ShopMenu(this);
 
-        // Initializing new JButton to toggle the shop
-        shopToggleButton = new JButton(toggleShopButtonIcon);
-        // Setting the bounds of the button
-        shopToggleButton.setBounds(0,(int)(0.75*getHeight()),(int)(0.075*getWidth()),(int)(0.05*getHeight()));
-
+        sidePanel = new SidePanel(this);
+        
         // Linking the button to perform a task on click
-        shopToggleButton.addActionListener(new ActionListener() {
+        sidePanel.getShopToggleButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
                 // Hides or shows the shop visibility
@@ -132,8 +117,6 @@ public class Game extends JFrame implements Runnable{
             }
         });
 
-        //Adds the button to the JFrame
-        add(shopToggleButton);
 
   
         // Add mouse listener for hooman placement
@@ -145,35 +128,21 @@ public class Game extends JFrame implements Runnable{
                 }
             }
         });
-
-        roundLabel = new JLabel(""+round, roundLabelIcon, SwingConstants.LEFT );
-        roundLabel.setBounds(0, 0, 128, 64);
-        roundLabel.setOpaque(false);
-        roundLabel.setBackground(new Color(0,0,0,127));
-        add(roundLabel);
-
-        livesLabel = new JLabel(""+lives, livesLabelIcon, SwingConstants.LEFT );
-        livesLabel.setBounds(0, 64, 128, 64);
-        add(livesLabel);
-
-        coinsLabel = new JLabel(""+coins, coinsLabelIcon, SwingConstants.LEFT );
-        coinsLabel.setBounds(0, 128, 128, 64);
-        add(coinsLabel);
     
 
 
         //Sets the order of each component on the content pane
 
-        getContentPane().setComponentZOrder(gameScreen, 5);//Chatgpt
-        getContentPane().setComponentZOrder(shop, 4);
-        getContentPane().setComponentZOrder(roundLabel, 3);
-        getContentPane().setComponentZOrder(livesLabel, 2);
-        getContentPane().setComponentZOrder(coinsLabel, 1);
-        getContentPane().setComponentZOrder(shopToggleButton, 0);
+        getContentPane().setComponentZOrder(gameScreen, 2);//Chatgpt
+        getContentPane().setComponentZOrder(shop, 1);
+        getContentPane().setComponentZOrder(sidePanel,0);
         
 
         // Makes the window visible
         setVisible(true);
+
+        // Makes window not resizable
+        setResizable(false);
 
         // Making sure that everything is displayed properly
         revalidate();
@@ -192,6 +161,29 @@ public class Game extends JFrame implements Runnable{
        
        
     }
+
+    public int getRound(){
+        return round;
+    }
+
+    public int getLives(){
+        return lives;
+    }
+
+    public int getCoins(){
+        return coins;
+    }
+
+    public GameScreen getGameScreen(){
+        return gameScreen;
+    }
+
+    public ShopMenu getShopMenu(){
+        return shop;
+    }
+
+
+
 
     public void loseLives(int livesToLose){
         lives-=livesToLose;
@@ -262,31 +254,7 @@ public class Game extends JFrame implements Runnable{
 
 
 
-    // Imports the required resources
-    private void importImages() {
-        // Retrieves the filepath of the image and reads it with a stream of bytes
-        // and then converts the stream into a bufferedImage
-        try {
-            InputStream inputStream = getClass().getResourceAsStream("/Resources/tileset.png");
-            tileSet = ImageIO.read(inputStream);
 
-            inputStream = getClass().getResourceAsStream("/Resources/shopBackground.png");
-            shopBackground = ImageIO.read(inputStream);
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } 
-
-
-        // Scales the icon to match the size of the button
-        toggleShopButtonIcon = new ImageIcon(new ImageIcon("Summative/app/src/main/java/Resources/shopButton.png").getImage().getScaledInstance((int)(0.075*getWidth()),(int)(0.05*getHeight()), Image.SCALE_SMOOTH)); 
-        livesLabelIcon = new ImageIcon(new ImageIcon("Summative/app/src/main/java/Resources/livesLabel.png").getImage().getScaledInstance((int)(0.075*getWidth()),(int)(0.05*getHeight()), Image.SCALE_SMOOTH));
-        roundLabelIcon = new ImageIcon(new ImageIcon("Summative/app/src/main/java/Resources/roundLabel.png").getImage().getScaledInstance((int)(0.075*getWidth()),(int)(0.05*getHeight()), Image.SCALE_SMOOTH));
-        coinsLabelIcon = new ImageIcon(new ImageIcon("Summative/app/src/main/java/Resources/coinsLabel.png").getImage().getScaledInstance((int)(0.075*getWidth()),(int)(0.05*getHeight()), Image.SCALE_SMOOTH));
-
-
-    }
 
     // Enables placement mode for the selected hooman
     public void startPlacementMode(Class<? extends Hooman> hoomanType) {

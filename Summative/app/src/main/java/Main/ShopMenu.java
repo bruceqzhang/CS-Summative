@@ -1,19 +1,18 @@
 package Main;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
-
-import GameObjects.Caveman;
 import GameObjects.Hooman;
-
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.InputStream;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -30,12 +29,17 @@ public class ShopMenu extends JPanel{
     
 
     // Constructor
-    public ShopMenu(Game game, Image background){
+    public ShopMenu(Game game){
+
+        importResources();
         this.game = game;
+        Insets insets = game.getInsets();
+        System.out.println(insets);
 
-
+        int shopHeight = (int)((game.getHeight() - insets.top - insets.bottom)/ 4.0);
+        int shopWidth = game.getWidth() - insets.left - insets.right;
         // Setting the shop bounds 
-        this.setBounds(0, (int)(3/4.0 * game.getHeight()), game.getWidth(),(int)(1/4.0*game.getHeight()));
+        this.setBounds(insets.left, game.getHeight()-shopHeight, shopWidth, shopHeight);
 
         setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
         //setBorder(BorderFactory.createLineBorder(new Color(125,90,50),16));
@@ -48,7 +52,7 @@ public class ShopMenu extends JPanel{
         // Making the shop invisible at the start
         setVisible(false);
 
-        setPreferredSize(new Dimension(game.getWidth(), game.getHeight() / 4));
+        setPreferredSize(new Dimension(shopWidth, shopHeight));
 
         // Adds a panel on the shop menu for displaying Hooman buttons
         setLayout(new GridLayout(2,7,32,32));
@@ -126,6 +130,16 @@ public class ShopMenu extends JPanel{
         setVisible(!this.isVisible());
         revalidate();
         repaint();
+    }
+
+    public void importResources(){
+        try{
+            InputStream inputStream = getClass().getResourceAsStream("/Resources/shopBackground.png");
+            background = ImageIO.read(inputStream);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        } 
     }
     
 }
