@@ -72,7 +72,7 @@ public class Game extends JFrame implements Runnable{
     public Game() {
         this.round = 0;
         this.lives = 100;
-        this.coins = 50;
+        this.coins = 100;
         roundIsFinished = true;
 
         setTitle("Hoomans vs Aliens");

@@ -63,14 +63,12 @@ public class Caveman extends Hooman{
             @Override
             public void actionPerformed(ActionEvent e) {
                 
-
                 if(swingAngle<=360){
                     swingAngle += 40; // Increment swing angle
                 }
                 else{
                     swingAngle = 0;
                     swingTimer.stop();
-                    ((Timer)e.getSource()).stop();
                 }
             }
         });

@@ -86,7 +86,7 @@ public class Archer extends Hooman{
                 else{
                     // Stop animation once its done                 
                     projectileDistance = 0;
-                    ((Timer)e.getSource()).stop();
+                    shootTimer.stop();
                                 
                 }
             }
@@ -107,7 +107,7 @@ public class Archer extends Hooman{
         int weaponX = (int) (getPosition().getX() + getSize() / 2.0);
         int weaponY = (int) (getPosition().getY()+ getSize() / 2.0);
 
-        double rotateAngle = Math.PI/4;
+        double rotateAngle = Math.PI/2;
         if(!getTargetAliens().isEmpty()){
             double deltaX = getTargetAliens().get(0).getPosition().getX() - getPosition().getX();
             double deltaY = getTargetAliens().get(0).getPosition().getY() - getPosition().getY();
