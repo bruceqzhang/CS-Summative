@@ -44,9 +44,9 @@ public class Farmer extends Hooman{
     private static Image[] importSprites() {
         Image[] sprites = new Image[2];
         try{
-            InputStream inputStream = Caveman.class.getResourceAsStream("/Resources/farmer.png");
+            InputStream inputStream = Hooman.class.getResourceAsStream("/Resources/farmer.png");
             sprites[0] = ImageIO.read(inputStream);
-            inputStream = Caveman.class.getResourceAsStream("/Resources/farmerPitchfork.png");
+            inputStream = Hooman.class.getResourceAsStream("/Resources/farmerPitchfork.png");
             sprites[1] = ImageIO.read(inputStream).getScaledInstance(WEAPON_SIZE,WEAPON_SIZE,Image.SCALE_AREA_AVERAGING);
         }
         catch(IOException e){

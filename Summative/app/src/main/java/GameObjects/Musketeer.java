@@ -11,13 +11,13 @@ import javax.swing.Timer;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class Archer extends Hooman{
+public class Musketeer extends Hooman{
     
     private int projectileDistance;
     private Timer shootTimer;
     
     // Global Constants for statistics and info
-    private static final String NAME = "Archer";
+    private static final String NAME = "Musketeer";
     private static final Image SPRITE = importSprites()[0];
     private static final Image WEAPON_SPRITE = importSprites()[1];
     private static final int WEAPON_SIZE = 48;
@@ -32,7 +32,7 @@ public class Archer extends Hooman{
     
 
     // Constructor
-    public Archer(Point position, boolean isActive, boolean isVisible){
+    public Musketeer(Point position, boolean isActive, boolean isVisible){
         super(NAME, SPRITE, position, isActive, isVisible,
         EVOLUTION_INDEX, DAMAGE, RANGE, SPLASH, RELOAD_SPEED, COST);
 
@@ -44,13 +44,13 @@ public class Archer extends Hooman{
     private static Image[] importSprites() {
         Image[] sprites = new Image[3];
         try{
-            InputStream inputStream = Archer.class.getResourceAsStream("/Resources/archer.png");
+            InputStream inputStream = Musketeer.class.getResourceAsStream("/Resources/musketeer.png");
             sprites[0] = ImageIO.read(inputStream);
 
-            inputStream = Hooman.class.getResourceAsStream("/Resources/archerBow.png");
+            inputStream = Musketeer.class.getResourceAsStream("/Resources/musketeerGun.png");
             sprites[1] = ImageIO.read(inputStream).getScaledInstance(WEAPON_SIZE,WEAPON_SIZE,Image.SCALE_AREA_AVERAGING);
 
-            inputStream = Hooman.class.getResourceAsStream("/Resources/archerArrow.png");
+            inputStream = Musketeer.class.getResourceAsStream("/Resources/musketeerBullet.png");
             sprites[2] = ImageIO.read(inputStream).getScaledInstance(PROJECTILE_SIZE,PROJECTILE_SIZE,Image.SCALE_AREA_AVERAGING);
         }
         catch(IOException e){
@@ -74,7 +74,7 @@ public class Archer extends Hooman{
         double deltaY = getTargetAliens().get(0).getPosition().getY() - getPosition().getY();
         double totalDistance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
 
-        shootTimer = new Timer(8, new ActionListener(){
+        shootTimer = new Timer(4, new ActionListener(){
 
             @Override
             public void actionPerformed(ActionEvent e){

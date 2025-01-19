@@ -10,12 +10,12 @@ import javax.imageio.ImageIO;
 import java.awt.Graphics2D;
 import java.awt.Image;
 
-public class Caveman extends Hooman{
+public class Knight extends Hooman{
     
     private int swingAngle;
     private Timer swingTimer;
     
-    private static final String NAME = "Caveman";
+    private static final String NAME = "Knight";
     private static final Image SPRITE = importSprites()[0];
     private static final Image WEAPON_SPRITE = importSprites()[1];
     private static final int EVOLUTION_INDEX = 0;
@@ -26,7 +26,7 @@ public class Caveman extends Hooman{
     private static final int COST = 30;
     
 
-    public Caveman(Point position, boolean isActive, boolean isVisible){
+    public Knight(Point position, boolean isActive, boolean isVisible){
         super(NAME, SPRITE, position, isActive, isVisible,
         EVOLUTION_INDEX, DAMAGE, RANGE, SPLASH, RELOAD_SPEED, COST);
 
@@ -38,9 +38,9 @@ public class Caveman extends Hooman{
     private static Image[] importSprites() {
         Image[] sprites = new Image[2];
         try{
-            InputStream inputStream = Hooman.class.getResourceAsStream("/Resources/caveman.png");
+            InputStream inputStream = Hooman.class.getResourceAsStream("/Resources/knight.png");
             sprites[0] = ImageIO.read(inputStream);
-            inputStream = Hooman.class.getResourceAsStream("/Resources/cavemanClub.png");
+            inputStream = Hooman.class.getResourceAsStream("/Resources/knightSword.png");
             sprites[1] = ImageIO.read(inputStream).getScaledInstance(getSize(),getSize(),Image.SCALE_AREA_AVERAGING);
         }
         catch(IOException e){
@@ -106,3 +106,4 @@ public class Caveman extends Hooman{
 
     
 }
+
