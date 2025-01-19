@@ -33,26 +33,26 @@ public class ShopMenu extends JPanel{
 
         importResources();
         this.game = game;
-        Insets insets = game.getInsets();
-        System.out.println(insets);
+        // Insets insets = game.getInsets();
+        // System.out.println(insets);
 
-        int shopHeight = (int)((game.getHeight() - insets.top - insets.bottom)/ 4.0);
-        int shopWidth = game.getWidth() - insets.left - insets.right;
-        // Setting the shop bounds 
-        this.setBounds(insets.left, game.getHeight()-shopHeight, shopWidth, shopHeight);
+        // int shopHeight = (int)((game.getHeight() - insets.top - insets.bottom)/ 4.0);
+        // int shopWidth = game.getWidth() - insets.left - insets.right;
+        // // Setting the shop bounds 
+        // this.setBounds(insets.left, game.getHeight()-shopHeight, shopWidth, shopHeight);
 
         setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
         //setBorder(BorderFactory.createLineBorder(new Color(125,90,50),16));
 
         // Adds the shop to the JFrame
-        game.add(this);
+        // game.add(this);
 
-        this.background = background.getScaledInstance(getWidth(),getHeight(), Image.SCALE_SMOOTH);
+        this.background = background.getScaledInstance(1280, 160, Image.SCALE_SMOOTH);
 
         // Making the shop invisible at the start
         setVisible(false);
 
-        setPreferredSize(new Dimension(shopWidth, shopHeight));
+        // setPreferredSize(new Dimension(shopWidth, shopHeight));
 
         // Adds a panel on the shop menu for displaying Hooman buttons
         setLayout(new GridLayout(2,7,32,32));

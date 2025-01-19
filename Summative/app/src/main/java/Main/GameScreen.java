@@ -29,9 +29,9 @@ public class GameScreen extends JPanel{
         importResources();
         this.game = game;
         // Covers entire JFrame with gameScreen
-        this.setBounds(0,0, game.getWidth(), game.getHeight());
-        // Loads the GUI onto the window
-        this.game.add(this);
+        // this.setBounds(0,0, game.getWidth(), game.getHeight());
+        // // Loads the GUI onto the window
+        // this.game.add(this);
         //Creates a 25x14 matrix array with every possibly individual tile from the imported tileset
         allTiles = new BufferedImage[25][14];
         for (int x = 0; x<25; x++){

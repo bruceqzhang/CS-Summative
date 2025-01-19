@@ -35,10 +35,10 @@ public class Game extends JFrame implements Runnable{
 
 
     private int lives;
+    private boolean roundIsFinished;
     private boolean gameOver;
 
     private int round;
-    private Hooman[] savedHoomans;
     private int coins;
     private int tileSize = 32;
 
@@ -69,26 +69,26 @@ public class Game extends JFrame implements Runnable{
 
     //Constructor
     public Game(){
-        this(0,null, 100, 50);
+        this(0, 100, 50);
     }
 
-    public Game(int round, Hooman[] savedHoomans, int lives, int coins) {
+    public Game(int round, int lives, int coins) {
         this.round = round;
-        this.savedHoomans = savedHoomans;
         this.lives = lives;
         this.coins = coins;
-        insets = getInsets();
-        gameOver = false;
+        roundIsFinished = true;
 
         // Creates a 1280x640 px window
         setPreferredSize(new Dimension(tileSize * 40, tileSize * 20));
-        pack();
+        
         setVisible(true);
 
         
+        insets = getInsets();
         int width = tileSize * 40 + insets.left + insets.right;
         int height = tileSize * 20 + insets.top + insets.bottom;
-        setSize(width, height);
+        setSize(width, height); 
+        System.out.println(width + " " + height);
 
         // Closes the program when the user closes the window
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -102,12 +102,17 @@ public class Game extends JFrame implements Runnable{
 
         // Creates the game screen GUI object
         gameScreen = new GameScreen(this);
-
+        gameScreen.setBounds(insets.left, 0, tileSize * 40, tileSize * 20);
+        add(gameScreen);
         // Initializing the shop
         shop = new ShopMenu(this);
+        shop.setBounds(insets.left, tileSize * 20 - 160, tileSize * 40, 160);
+        add(shop);
 
         sidePanel = new SidePanel(this);
-        
+        sidePanel.setBounds(insets.left, tileSize * 20 - 340, 180, tileSize * 20);
+        add(sidePanel);
+
         // Linking the button to perform a task on click
         sidePanel.getShopToggleButton().addActionListener(new ActionListener() {
             @Override
@@ -182,7 +187,21 @@ public class Game extends JFrame implements Runnable{
         return shop;
     }
 
+    public SidePanel getSidePanel(){
+        return sidePanel;
+    }
 
+    public boolean getRoundFinished(){
+        return roundIsFinished;
+    }
+
+    public boolean getGameOver(){
+        return gameOver;
+    }
+
+    public void setRoundFinished(boolean roundIsFinished) {
+        this.roundIsFinished = roundIsFinished;
+    }
 
 
     public void loseLives(int livesToLose){
