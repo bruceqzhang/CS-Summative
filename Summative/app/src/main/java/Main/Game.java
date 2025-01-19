@@ -75,6 +75,8 @@ public class Game extends JFrame implements Runnable{
         this.coins = 50;
         roundIsFinished = true;
 
+        setTitle("Hoomans vs Aliens");
+
         // Creates a 1280x640 px window
         setPreferredSize(new Dimension(tileSize * 40, tileSize * 20));
         
@@ -212,14 +214,18 @@ public class Game extends JFrame implements Runnable{
     }
 
 
-    public void loseLives(int livesToLose){
-        lives-=livesToLose;
+    public void loseLives(int lives){
+        this.lives-=lives;
         
-        if (lives<=0){
+        if (this.lives<=0){
             gameOver = true;
         }
     }
 
+    public void addCoins(int coins){
+        this.coins+=coins;
+    }
+    
     private void loadRound() {
         alienIndex = 0;
         lastAlienTime = System.currentTimeMillis();
@@ -229,6 +235,27 @@ public class Game extends JFrame implements Runnable{
     // Update method to be used for checking inputs and updating the changes in the actual game
     // Such as movement of aliens or projectile motion
     private void update(){
+
+        if (!pendingHoomans.isEmpty()){
+            Hooman.addHoomans(pendingHoomans);
+            pendingHoomans.clear();
+        }
+
+        ArrayList<Alien> activeAliens = new ArrayList<Alien>();
+        for (Alien alien: Alien.getAliens()){
+            alien.move();
+            if (alien.getReachedGoal()){
+                loseLives(alien.getLevelIndex()+1);
+            }
+            if (alien.getIsKilled()){
+                addCoins((int)Math.pow(alien.getOriginalLevelIndex()+1,2));
+            }
+            if (!alien.getBeingRemoved()){
+                activeAliens.add(alien);
+            }
+        }
+        Alien.setAliens(activeAliens);
+
 
         if (gameOver||roundIsFinished||roundAliens==null){
             return;
@@ -245,10 +272,7 @@ public class Game extends JFrame implements Runnable{
         }
 
 
-        if (!pendingHoomans.isEmpty()){
-            Hooman.addHoomans(pendingHoomans);
-            pendingHoomans.clear();
-        }
+        
 
 
         if (alienIndex<roundAliens.length){
@@ -260,18 +284,6 @@ public class Game extends JFrame implements Runnable{
             }
         }
 
-
-        ArrayList<Alien> activeAliens = new ArrayList<Alien>();
-        for (Alien alien: Alien.getAliens()){
-            alien.move();
-            if (alien.getReachedGoal()){
-                loseLives(alien.getLevelIndex()+1);
-            }
-            if (!alien.getBeingRemoved()){
-                activeAliens.add(alien);
-            }
-        }
-        Alien.setAliens(activeAliens);
 
         
         if (activeAliens.isEmpty() && alienIndex>=roundAliens.length && Alien.getAliens().isEmpty()){
@@ -300,6 +312,8 @@ public class Game extends JFrame implements Runnable{
             Constructor <? extends Hooman> constructor = selectedHoomanType.getConstructor(Point.class, boolean.class, boolean.class);
             Hooman newHooman = constructor.newInstance(new Point((int)(position.getX()-GameObject.getSize()/2.0), (int)position.getY()-GameObject.getSize()), true, true);
             pendingHoomans.add(newHooman);
+            
+            addCoins(-newHooman.getCost());
 
             // Exit placement mode
             isPlacingHooman = false;

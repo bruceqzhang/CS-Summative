@@ -21,8 +21,8 @@ public class Alien extends GameObject implements Downgradable, Removable{
     private static final Image[] SPRITE_PER_LEVEL = importSprites();
     private static final int[] SPEED_PER_LEVEL ={2,4,2,7,8}, MAX_HEALTH_PER_LEVEL = {50,50,150,100,200};
     
-    private boolean reachedGoal, beingRemoved;
-    private int levelIndex,speed, maxHealth, currentWaypointIndex, currentHealth;
+    private boolean reachedGoal, isKilled, beingRemoved;
+    private int levelIndex,speed, maxHealth, currentWaypointIndex, currentHealth, originalLevelIndex;
     private final int delay;
     private double progress;
 
@@ -36,8 +36,11 @@ public class Alien extends GameObject implements Downgradable, Removable{
         this.delay = delay;
         progress = 0;
         currentHealth = maxHealth;
+        originalLevelIndex = levelIndex;
         reachedGoal = false;
+        isKilled = false;
         beingRemoved = false;
+    
         if (isActive){
             addAlien(this);
         }
@@ -60,9 +63,6 @@ public class Alien extends GameObject implements Downgradable, Removable{
         return maxHealth;
     }
 
-    public int getCurrentHealth(){
-        return currentHealth;
-    }
 
     public int getCurrentWaypointIndex(){
         return currentWaypointIndex;
@@ -76,9 +76,21 @@ public class Alien extends GameObject implements Downgradable, Removable{
 
         return progress;
     }
+
+    public int getCurrentHealth(){
+        return currentHealth;
+    }
+
+    public int getOriginalLevelIndex(){
+        return originalLevelIndex;
+    }
     
     public boolean getReachedGoal(){
         return reachedGoal;
+    }
+
+    public boolean getIsKilled(){
+        return isKilled;
     }
 
     public boolean getBeingRemoved(){
@@ -93,8 +105,8 @@ public class Alien extends GameObject implements Downgradable, Removable{
         }
     }
 
-    public void decrementLevelIndex(){
-        levelIndex++;
+    public void updateLevelIndex(){
+        levelIndex--;
     }
 
     public void updateSpeed(){
@@ -182,13 +194,14 @@ public class Alien extends GameObject implements Downgradable, Removable{
     @Override
     public void downgrade() {
         if (getLevelIndex()>0){
-            decrementLevelIndex();
+            updateLevelIndex();
             updateSpeed();
             updateHealth();
             setName(NAME_PER_LEVEL[levelIndex]);
             setSprite(SPRITE_PER_LEVEL[levelIndex]);
         }
         else{
+            isKilled = true;
             remove();
         }
     }   
