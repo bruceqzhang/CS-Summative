@@ -68,14 +68,11 @@ public class Game extends JFrame implements Runnable{
     }
 
     //Constructor
-    public Game(){
-        this(0, 100, 50);
-    }
 
-    public Game(int round, int lives, int coins) {
-        this.round = round;
-        this.lives = lives;
-        this.coins = coins;
+    public Game() {
+        this.round = 0;
+        this.lives = 100;
+        this.coins = 50;
         roundIsFinished = true;
 
         // Creates a 1280x640 px window
@@ -110,7 +107,7 @@ public class Game extends JFrame implements Runnable{
         add(shop);
 
         sidePanel = new SidePanel(this);
-        sidePanel.setBounds(insets.left, tileSize * 20 - 340, 180, tileSize * 20);
+        sidePanel.setBounds(insets.left, tileSize * 20 - 400, 180, tileSize * 20);
         add(sidePanel);
 
         // Linking the button to perform a task on click
@@ -122,6 +119,19 @@ public class Game extends JFrame implements Runnable{
             }
         });
 
+        sidePanel.getMessageButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                if(gameOver){
+                    System.exit(0);
+                }
+                else if (roundIsFinished){
+                    roundIsFinished = false;
+                    round++;
+                    loadRound();
+                }
+            }
+        });
 
   
         // Add mouse listener for hooman placement
@@ -152,8 +162,6 @@ public class Game extends JFrame implements Runnable{
         // Making sure that everything is displayed properly
         revalidate();
         repaint();
-
-        loadRound();
 
         //Starts gameThread
         gameThread = new Thread(this);
@@ -222,6 +230,9 @@ public class Game extends JFrame implements Runnable{
     // Such as movement of aliens or projectile motion
     private void update(){
 
+        if (gameOver||roundIsFinished||roundAliens==null){
+            return;
+        }
         
         long currentTime = System.currentTimeMillis();
         for (Hooman hooman: Hooman.getHoomans()){
@@ -263,11 +274,12 @@ public class Game extends JFrame implements Runnable{
         Alien.setAliens(activeAliens);
 
         
-        // if (roundIsFinished){
-        //     roundIsFinished = false;
-        //     round++;
-        //     loadRound();
-        // }
+        if (activeAliens.isEmpty() && alienIndex>=roundAliens.length && Alien.getAliens().isEmpty()){
+            roundIsFinished = true;
+        }
+        else{
+            roundIsFinished = false;
+        }
 
     }
 
