@@ -17,7 +17,7 @@ public class GameScreen extends JPanel{
     private BufferedImage[][] propOrder;
     private BufferedImage[][] allTiles;
 
-    private Game game;
+  
 
     private int waypointOffsetX;
     private int waypointOffsetY;
@@ -25,13 +25,10 @@ public class GameScreen extends JPanel{
     private boolean maxWaypointsReached;
     
     //Constructor
-    public GameScreen(Game game){
+    public GameScreen(){
         importResources();
-        this.game = game;
-        // Covers entire JFrame with gameScreen
-        // this.setBounds(0,0, game.getWidth(), game.getHeight());
-        // // Loads the GUI onto the window
-        // this.game.add(this);
+
+
         //Creates a 25x14 matrix array with every possibly individual tile from the imported tileset
         allTiles = new BufferedImage[25][14];
         for (int x = 0; x<25; x++){

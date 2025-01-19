@@ -30,6 +30,8 @@ public abstract class Hooman extends GameObject implements Placeable{
         this.cost = cost;
 
         lastAttackTime = 0;
+
+        currentSortType = 0;
         //Adding this object to a static arrayList for all Hooman objects
         //activeHoomans.add(this);
     }
@@ -195,11 +197,43 @@ public abstract class Hooman extends GameObject implements Placeable{
         }
     }
 
-    private static void sortAZ(){}
+    private static void sortAZ(){
+        for (int i = 0; i<sortedHoomans.length; i++){
+            for (int j = i+1; j<sortedHoomans.length; j++){
+                if (sortedHoomans[i].compareAlphabeticTo(sortedHoomans[j])>0){
+                    Hooman temp = sortedHoomans[i];
+                    sortedHoomans[i] = sortedHoomans[j];
+                    sortedHoomans[j] = temp;
+                }
+            }
+        }
+    }
 
-    private static void sortCost(){}
+    private static void sortCost(){
+        for (int i = 0; i<sortedHoomans.length; i++){
+            int smallest = i;
+            for (int j = i+1; j<sortedHoomans.length; j++){
+                if (sortedHoomans[smallest].compareCostTo(sortedHoomans[j])>0){
+                    smallest = j;
+                }
+            }
+            Hooman temp = sortedHoomans[i];
+            sortedHoomans[i] = sortedHoomans[smallest];
+            sortedHoomans[smallest] = temp;
+        }
+    }
 
-    private static void sortEvolution(){}
+    private static void sortEvolution(){
+        for (int i = 1; i<sortedHoomans.length; i++){
+            for (int j = i-1; j>=0; j--){
+                if (sortedHoomans[i].compareEvolutionTo(sortedHoomans[j])<0){
+                    Hooman temp = sortedHoomans[j];
+                    sortedHoomans[j] = sortedHoomans[j+1];
+                    sortedHoomans[j+1] = temp;
+                }
+            }
+        }
+    }
 
 
     public static ArrayList<Hooman> getHoomans(){

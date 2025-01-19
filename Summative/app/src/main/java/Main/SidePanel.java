@@ -26,8 +26,6 @@ public class SidePanel extends JPanel{
     public SidePanel(Game game){
 
         this.game = game;
-        // this.setBounds(0,240,160,320);
-        // game.add(this);
 
         importResources();
 
@@ -108,7 +106,6 @@ public class SidePanel extends JPanel{
     public void importResources(){
         int width = (int)getWidth();
         int height = (int)getHeight();
-        System.out.println(width + " " + height);
 
         // Scales the icon to match the size of the button
 

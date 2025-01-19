@@ -22,7 +22,6 @@ import java.awt.GridLayout;
 
 
 public class ShopMenu extends JPanel{
-    private int coins;
     private Image background;
     private Game game;
     private JButton sortButton;
@@ -44,19 +43,22 @@ public class ShopMenu extends JPanel{
         // Adds a panel on the shop menu for displaying Hooman buttons
         setLayout(new GridLayout(2,7,32,32));
         setOpaque(false);
+        Hooman.sort();
         sortButton = new JButton("A-Z");
         sortButton.addActionListener(new ActionListener(){
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                Hooman.sort();
                 switch (Hooman.getCurrentSortType()){
                     case 0 -> sortButton.setText("A-Z");
                     case 1 -> sortButton.setText("Cost");
                     case 2 -> sortButton.setText("Evolution");
                 }
+                Hooman.sort();
                 removeAll();
                 displayButtons();
+                revalidate();
+                repaint();
                 
             }
             

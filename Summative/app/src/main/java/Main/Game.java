@@ -87,7 +87,6 @@ public class Game extends JFrame implements Runnable{
         int width = tileSize * 40 + insets.left + insets.right;
         int height = tileSize * 20 + insets.top + insets.bottom;
         setSize(width, height); 
-        System.out.println(width + " " + height);
 
         // Closes the program when the user closes the window
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -100,7 +99,7 @@ public class Game extends JFrame implements Runnable{
 
 
         // Creates the game screen GUI object
-        gameScreen = new GameScreen(this);
+        gameScreen = new GameScreen();
         gameScreen.setBounds(insets.left, 0, tileSize * 40, tileSize * 20);
         add(gameScreen);
         // Initializing the shop
@@ -311,9 +310,14 @@ public class Game extends JFrame implements Runnable{
 
             Constructor <? extends Hooman> constructor = selectedHoomanType.getConstructor(Point.class, boolean.class, boolean.class);
             Hooman newHooman = constructor.newInstance(new Point((int)(position.getX()-GameObject.getSize()/2.0), (int)position.getY()-GameObject.getSize()), true, true);
-            pendingHoomans.add(newHooman);
             
+
+            if (coins<newHooman.getCost()){
+                newHooman = null;
+                return;
+            }
             addCoins(-newHooman.getCost());
+            pendingHoomans.add(newHooman);
 
             // Exit placement mode
             isPlacingHooman = false;
