@@ -1,5 +1,4 @@
 package GameObjects;
-import java.awt.image.BufferedImage;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.awt.Graphics;
@@ -11,7 +10,7 @@ import java.awt.Image;
 
 public abstract class Hooman extends GameObject implements Placeable{
     private static ArrayList<Hooman> activeHoomans = new ArrayList<Hooman>(); 
-    private static Hooman[] sortedHoomans = {new Caveman(new Point(), false, false), new Archer(new Point(), false, false), new Farmer(new Point(), false, false), new Musketeer(new Point(), false, false), new Caveman(new Point(), false, false), new Caveman(new Point(), false, false), new Caveman(new Point(), false, false), new Caveman(new Point(), false, false), new Caveman(new Point(), false, false), new Caveman(new Point(), false, false), new Caveman(new Point(), false, false), new Caveman(new Point(), false, false)};
+    private static Hooman[] sortedHoomans = {new Caveman(new Point(), false, false), new Archer(new Point(), false, false), new Farmer(new Point(), false, false), new Musketeer(new Point(), false, false), new Knight(new Point(), false, false), new Wizard(new Point(), false, false), new Tank(new Point(), false, false), new Soldier(new Point(), false, false), new Ballista(new Point(), false, false), new Brute(new Point(), false, false), new Laser(new Point(), false, false), new Bowler(new Point(), false, false)};
     private static int currentSortType;
     private final int evolutionIndex, damage, range, splash, reloadSpeed, cost;
     private long lastAttackTime;

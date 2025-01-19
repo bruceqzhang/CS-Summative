@@ -10,12 +10,12 @@ import javax.imageio.ImageIO;
 import java.awt.Graphics2D;
 import java.awt.Image;
 
-public class Knight extends Hooman{
+public class Brute extends Hooman{
     
     private int swingAngle;
     private Timer swingTimer;
     
-    private static final String NAME = "Knight";
+    private static final String NAME = "Brute";
     private static final Image SPRITE = importSprites()[0];
     private static final Image WEAPON_SPRITE = importSprites()[1];
     private static final int EVOLUTION_INDEX = 0;
@@ -26,7 +26,7 @@ public class Knight extends Hooman{
     private static final int COST = 30;
     
 
-    public Knight(Point position, boolean isActive, boolean isVisible){
+    public Brute(Point position, boolean isActive, boolean isVisible){
         super(NAME, SPRITE, position, isActive, isVisible,
         EVOLUTION_INDEX, DAMAGE, RANGE, SPLASH, RELOAD_SPEED, COST);
 
@@ -38,16 +38,17 @@ public class Knight extends Hooman{
     private static Image[] importSprites() {
         Image[] sprites = new Image[2];
         try{
-            InputStream inputStream = Hooman.class.getResourceAsStream("/Resources/knight.png");
+            InputStream inputStream = Hooman.class.getResourceAsStream("/Resources/brute.png");
             sprites[0] = ImageIO.read(inputStream);
-            inputStream = Hooman.class.getResourceAsStream("/Resources/knightSword.png");
-            sprites[1] = ImageIO.read(inputStream).getScaledInstance(getSize()*2,getSize()*2,Image.SCALE_AREA_AVERAGING);
+            inputStream = Hooman.class.getResourceAsStream("/Resources/bruteAxe.png");
+            sprites[1] = ImageIO.read(inputStream).getScaledInstance(getSize(),getSize(),Image.SCALE_AREA_AVERAGING);
         }
         catch(IOException e){
             e.printStackTrace();
         }
         return sprites;
     }
+
 
     @Override
     public void animateAttack() {
@@ -77,10 +78,10 @@ public class Knight extends Hooman{
     }
 
     
-    // Draw the Knight and its attack animation
+    // Draw the Caveman and its attack animation
     @Override
     public void draw(Graphics g) {
-        // Draw the Knight
+        // Draw the Caveman
         g.drawImage(SPRITE, (int)(getPosition().getX()), (int)getPosition().getY(), getSize(), getSize(), null);
         // Draw the club swing
         if (swingAngle > 0) {
@@ -88,7 +89,7 @@ public class Knight extends Hooman{
             int startX = (int) (getPosition().getX() + getSize()/2.0);
             int startY = (int) (getPosition().getY() + getSize()/2.0);
             
-            // Set the pivot point for rotation at the base of the knight
+            // Set the pivot point for rotation at the base of the caveman
             g2d.translate(startX, startY);
             // Rotate by the swing angle
             g2d.rotate(Math.toRadians(swingAngle));
@@ -105,4 +106,3 @@ public class Knight extends Hooman{
 
     
 }
-

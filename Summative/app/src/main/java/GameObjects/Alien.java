@@ -8,6 +8,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
+
+import org.checkerframework.checker.units.qual.s;
+
 import Interfaces.Downgradable;
 import Interfaces.Removable;
 import java.io.BufferedReader;
@@ -17,9 +20,9 @@ public class Alien extends GameObject implements Downgradable, Removable{
     private static ArrayList<Alien> activeAliens = new ArrayList<Alien>();
     private static final ArrayList<Point> WAYPOINTS = new ArrayList<Point>();
     private static final Point STARTING_POINT = new Point(0,112);
-    private static final String[] NAME_PER_LEVEL = {"Crawler","Stinger","Shell", "Gloop", "Bloble"};
+    private static final String[] NAME_PER_LEVEL = {"Crawler","Stinger","Shell", "Gloop", "Bloble", "Glob", "Tentacule", "Garugant", "Droid"};
     private static final Image[] SPRITE_PER_LEVEL = importSprites();
-    private static final int[] SPEED_PER_LEVEL ={2,4,2,7,8}, MAX_HEALTH_PER_LEVEL = {50,50,150,100,200};
+    private static final int[] SPEED_PER_LEVEL ={2,3,2,4,4,5,5,7,7}, MAX_HEALTH_PER_LEVEL = {50,50,150,100,200,250,300,300,400};
     
     private boolean reachedGoal, isKilled, beingRemoved;
     private int levelIndex,speed, maxHealth, currentWaypointIndex, currentHealth, originalLevelIndex;
@@ -254,7 +257,10 @@ public class Alien extends GameObject implements Downgradable, Removable{
                 br.close();
                 return roundAliens;
             }
-            br.close();
+            else{
+                br.close();
+                return null;
+            }
             //Possible else statement here for random aliens?
         } catch (IOException e) {
             e.printStackTrace();
@@ -265,16 +271,20 @@ public class Alien extends GameObject implements Downgradable, Removable{
     }
 
     public static Image[] importSprites() {
-        Image[] sprites = new Image[5];
+        Image[] sprites = new Image[9];
         BufferedImage spriteSheet;
         try{
             InputStream inputStream = Alien.class.getResourceAsStream("/Resources/alienSpriteSheet.png");
             spriteSheet = ImageIO.read(inputStream);
-            sprites[0] = spriteSheet.getSubimage(24,24,128,128).getScaledInstance(32,32,Image.SCALE_AREA_AVERAGING);
-            sprites[1] = spriteSheet.getSubimage(12,12,64,64);
-            sprites[2] = spriteSheet.getSubimage(12,12,64,64);
-            sprites[3] = spriteSheet.getSubimage(12,12,64,64);
-            sprites[4] = spriteSheet.getSubimage(12,12,64,64);
+            sprites[0] = spriteSheet.getSubimage(24,24,128,128).getScaledInstance(getSize(),getSize(),Image.SCALE_AREA_AVERAGING);
+            sprites[1] = spriteSheet.getSubimage(176,24,128,128).getScaledInstance(getSize(),getSize(),Image.SCALE_AREA_AVERAGING);
+            sprites[2] = spriteSheet.getSubimage(24,176,128,128).getScaledInstance(getSize(),getSize(),Image.SCALE_AREA_AVERAGING);
+            sprites[3] = spriteSheet.getSubimage(24,328,128,128).getScaledInstance(getSize(),getSize(),Image.SCALE_AREA_AVERAGING);
+            sprites[4] = spriteSheet.getSubimage(328,328,128,128).getScaledInstance(getSize(), getSize(), Image.SCALE_AREA_AVERAGING);
+            sprites[5] = spriteSheet.getSubimage(176,176,128,128).getScaledInstance(getSize(), getSize(), Image.SCALE_AREA_AVERAGING);
+            sprites[6] = spriteSheet.getSubimage(328,176,128,128).getScaledInstance(getSize(), getSize(), Image.SCALE_AREA_AVERAGING);
+            sprites[7] = spriteSheet.getSubimage(176,328,128,128).getScaledInstance(getSize(), getSize(), Image.SCALE_AREA_AVERAGING);
+            sprites[8] = spriteSheet.getSubimage(328,24,128,128).getScaledInstance(getSize(), getSize(), Image.SCALE_AREA_AVERAGING);  
         }
         catch(IOException e){
             e.printStackTrace();

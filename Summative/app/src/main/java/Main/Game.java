@@ -229,6 +229,9 @@ public class Game extends JFrame implements Runnable{
         alienIndex = 0;
         lastAlienTime = System.currentTimeMillis();
         roundAliens = Alien.getRoundAliens(round);
+        if (roundAliens == null) {
+            gameOver = true;
+        }
     }
 
     // Update method to be used for checking inputs and updating the changes in the actual game
