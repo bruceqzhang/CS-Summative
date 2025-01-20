@@ -22,8 +22,8 @@ public class Alien extends GameObject implements Downgradable, Removable {
     private static final Point STARTING_POINT = new Point(0, 112);
     private static final String[] NAME_PER_LEVEL = {"Crawler", "Stinger", "Shell", "Gloop", "Bloble", "Glob", "Tentacule", "Garugant", "Droid"};
     private static final Image[] SPRITE_PER_LEVEL = importSprites();
-    private static final int[] SPEED_PER_LEVEL = {3, 4, 3, 5, 5, 6, 6, 7, 7};
-    private static final int[] MAX_HEALTH_PER_LEVEL = {40, 50, 80, 70, 100, 120, 140, 150, 200};
+    private static final int[] SPEED_PER_LEVEL = {3, 4, 3, 5, 5, 6, 6, 6, 6};
+    private static final int[] MAX_HEALTH_PER_LEVEL = {20, 30, 50, 40, 70, 80, 100, 150, 200};
 
     private boolean reachedGoal, isKilled, beingRemoved;
     private int levelIndex, speed, maxHealth, currentWaypointIndex, currentHealth, originalLevelIndex;

@@ -65,7 +65,7 @@ public class Game extends JFrame implements Runnable {
     public Game() {
         this.round = 0;
         this.lives = 100;
-        this.coins = 125;
+        this.coins = 150;
         roundIsFinished = true;
 
         setTitle("Hoomans vs Aliens");
@@ -286,7 +286,7 @@ public class Game extends JFrame implements Runnable {
                 loseLives(alien.getLevelIndex() + 1);
             }
             if (alien.getIsKilled()) {
-                addCoins(2*(int) Math.pow(alien.getOriginalLevelIndex() + 1, 2));
+                addCoins((int) (3*Math.pow(alien.getOriginalLevelIndex() + 1, 1.5)));
             }
             if (!alien.getBeingRemoved()) {
                 activeAliens.add(alien);
