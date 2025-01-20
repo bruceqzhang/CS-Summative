@@ -23,7 +23,7 @@ public class Alien extends GameObject implements Downgradable, Removable {
     private static final String[] NAME_PER_LEVEL = {"Crawler", "Stinger", "Shell", "Gloop", "Bloble", "Glob", "Tentacule", "Garugant", "Droid"};
     private static final Image[] SPRITE_PER_LEVEL = importSprites();
     private static final int[] SPEED_PER_LEVEL = {3, 4, 3, 5, 5, 6, 6, 7, 7};
-    private static final int[] MAX_HEALTH_PER_LEVEL = {40, 50, 125, 80, 175, 200, 300, 250, 350};
+    private static final int[] MAX_HEALTH_PER_LEVEL = {40, 50, 80, 70, 100, 120, 140, 150, 200};
 
     private boolean reachedGoal, isKilled, beingRemoved;
     private int levelIndex, speed, maxHealth, currentWaypointIndex, currentHealth, originalLevelIndex;
@@ -365,6 +365,7 @@ public class Alien extends GameObject implements Downgradable, Removable {
      * @return An array of Aliens for the specified round.
      */
     public static Alien[] getRoundAliens(int round) {
+        // Uses FileIO to read the Aliens for the specified round from the Rounds.txt file
         try {
             BufferedReader br = new BufferedReader(new FileReader("/Users/brucezhang/Coding/CS-Summative/Summative/app/src/main/java/TextFiles/Rounds.txt"));
             String line = "";

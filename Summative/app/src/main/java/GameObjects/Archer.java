@@ -26,12 +26,12 @@ public class Archer extends Hooman {
     private static final int WEAPON_SIZE = 48;
     private static final Image PROJECTILE_SPRITE = importSprites()[2];
     private static final int PROJECTILE_SIZE = 64;
-    private static final int EVOLUTION_INDEX = 3;
+    private static final int EVOLUTION_INDEX = 4;
     private static final int DAMAGE = 50; // Balanced damage
     private static final int RANGE = 400; // Balanced range
     private static final int SPLASH = 1; // Archers typically do not have splash damage
     private static final int RELOAD_SPEED = 1500; // Balanced reload speed
-    private static final int COST = 50; // Balanced cost
+    private static final int COST = 75; // Balanced cost
 
     /**
      * Constructor for the Archer class.
@@ -149,5 +149,15 @@ public class Archer extends Hooman {
 
             g2dProjectile.dispose();
         }
+    }
+
+    /**
+     * Gets the shoot timer.
+     * 
+     * @return The shoot timer.
+     */
+    @Override
+    public Timer getTimer() {
+        return shootTimer;
     }
 }

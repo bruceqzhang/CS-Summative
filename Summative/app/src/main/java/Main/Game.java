@@ -65,7 +65,7 @@ public class Game extends JFrame implements Runnable {
     public Game() {
         this.round = 0;
         this.lives = 100;
-        this.coins = 75;
+        this.coins = 125;
         roundIsFinished = true;
 
         setTitle("Hoomans vs Aliens");
@@ -286,7 +286,7 @@ public class Game extends JFrame implements Runnable {
                 loseLives(alien.getLevelIndex() + 1);
             }
             if (alien.getIsKilled()) {
-                addCoins((int) Math.pow(alien.getOriginalLevelIndex() + 1, 1.25));
+                addCoins(2*(int) Math.pow(alien.getOriginalLevelIndex() + 1, 2));
             }
             if (!alien.getBeingRemoved()) {
                 activeAliens.add(alien);
@@ -303,6 +303,9 @@ public class Game extends JFrame implements Runnable {
         long currentTime = System.currentTimeMillis();
         for (Hooman hooman : Hooman.getHoomans()) {
             if (currentTime - hooman.getLastAttackTime() >= hooman.getReloadSpeed()) {
+                if (hooman.getTimer()!=null){
+                    hooman.getTimer().stop();
+                }
                 hooman.findTargetAliens();
                 hooman.attack();
             }

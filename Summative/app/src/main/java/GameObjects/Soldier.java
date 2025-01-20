@@ -155,4 +155,14 @@ public class Soldier extends Hooman {
             g2dProjectile.dispose();
         }
     }
+    
+    /**
+     * Gets the shoot timer.
+     * 
+     * @return The shoot timer.
+     */
+    @Override
+    public Timer getTimer() {
+        return shootTimer;
+    }
 }

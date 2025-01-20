@@ -2,6 +2,9 @@ package GameObjects;
 
 import java.awt.Point;
 import java.util.ArrayList;
+
+import javax.swing.Timer;
+
 import java.awt.Graphics;
 import Interfaces.Placeable;
 import java.awt.Image;
@@ -192,6 +195,7 @@ public abstract class Hooman extends GameObject implements Placeable {
      */
     public abstract void draw(Graphics g);
 
+    public abstract Timer getTimer();
     /**
      * Places the Hooman onto the game field.
      * 
@@ -246,6 +250,7 @@ public abstract class Hooman extends GameObject implements Placeable {
      * Sorts the Hoomans alphabetically.
      */
     private static void sortAZ() {
+        // Uses bubble sort to sort the Hoomans alphabetically
         for (int i = 0; i < sortedHoomans.length; i++) {
             for (int j = i + 1; j < sortedHoomans.length; j++) {
                 if (sortedHoomans[i].compareAlphabeticTo(sortedHoomans[j]) > 0) {
@@ -261,6 +266,7 @@ public abstract class Hooman extends GameObject implements Placeable {
      * Sorts the Hoomans by cost.
      */
     private static void sortCost() {
+        // Uses selection sort to sort the Hoomans by cost
         for (int i = 0; i < sortedHoomans.length; i++) {
             int smallest = i;
             for (int j = i + 1; j < sortedHoomans.length; j++) {
@@ -278,6 +284,7 @@ public abstract class Hooman extends GameObject implements Placeable {
      * Sorts the Hoomans by evolution index.
      */
     private static void sortEvolution() {
+        // Uses insertion sort to sort the Hoomans by evolution
         for (int i = 1; i < sortedHoomans.length; i++) {
             for (int j = i - 1; j >= 0; j--) {
                 if (sortedHoomans[i].compareEvolutionTo(sortedHoomans[j]) < 0) {

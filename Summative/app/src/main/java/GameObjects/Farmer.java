@@ -25,7 +25,7 @@ public class Farmer extends Hooman {
     private static final Image SPRITE = importSprites()[0];
     private static final Image WEAPON_SPRITE = importSprites()[1];
     private static final int WEAPON_SIZE = 128;
-    private static final int EVOLUTION_INDEX = 2;
+    private static final int EVOLUTION_INDEX = 1;
     private static final int DAMAGE = 30; // Balanced damage
     private static final int RANGE = 70; // Balanced range
     private static final int SPLASH = 15; // Balanced splash damage radius
@@ -134,5 +134,15 @@ public class Farmer extends Hooman {
 
             g2d.dispose();
         }
+    }
+     
+    /**
+     * Gets the stab timer.
+     * 
+     * @return The stab timer.
+     */
+    @Override
+    public Timer getTimer() {
+        return stabTimer;
     }
 }

@@ -22,7 +22,7 @@ public class Knight extends Hooman {
     private static final String NAME = "Knight";
     private static final Image SPRITE = importSprites()[0];
     private static final Image WEAPON_SPRITE = importSprites()[1];
-    private static final int EVOLUTION_INDEX = 6;
+    private static final int EVOLUTION_INDEX = 5;
     private static final int DAMAGE = 100; // Balanced damage
     private static final int RANGE = 150; // Balanced range
     private static final int SPLASH = 100; // Balanced splash damage radius
@@ -111,5 +111,15 @@ public class Knight extends Hooman {
             // Reset the graphics transformations
             g2d.dispose();
         }
+    }
+     
+    /**
+     * Gets the swing timer.
+     * 
+     * @return The swing timer.
+     */
+    @Override
+    public Timer getTimer() {
+        return swingTimer;
     }
 }

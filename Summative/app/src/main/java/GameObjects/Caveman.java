@@ -112,4 +112,14 @@ public class Caveman extends Hooman {
             g2d.dispose();
         }
     }
+     
+    /**
+     * Gets the swing timer.
+     * 
+     * @return The swing timer.
+     */
+    @Override
+    public Timer getTimer() {
+        return swingTimer;
+    }
 }
