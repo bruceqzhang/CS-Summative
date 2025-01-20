@@ -290,6 +290,36 @@ public abstract class Hooman extends GameObject implements Placeable {
     }
 
     /**
+     * Compares the Hooman alphabetically to another Hooman.
+     * 
+     * @param hooman The Hooman to compare to.
+     * @return The comparison result.
+     */
+    private int compareAlphabeticTo(Hooman hooman) {
+        return getName().compareTo(hooman.getName());
+    }
+
+    /**
+     * Compares the cost of the Hooman to another Hooman.
+     * 
+     * @param hooman The Hooman to compare to.
+     * @return The comparison result.
+     */
+    private int compareCostTo(Hooman hooman) {
+        return getCost() - hooman.getCost();
+    }
+
+    /**
+     * Compares the evolution index of the Hooman to another Hooman.
+     * 
+     * @param hooman The Hooman to compare to.
+     * @return The comparison result.
+     */
+    private int compareEvolutionTo(Hooman hooman) {
+        return getEvolutionIndex() - hooman.getEvolutionIndex();
+    }
+
+    /**
      * Gets the list of active Hoomans.
      * 
      * @return The list of active Hoomans.
@@ -323,35 +353,5 @@ public abstract class Hooman extends GameObject implements Placeable {
      */
     public static void setHoomans(ArrayList<Hooman> hoomans) {
         activeHoomans = hoomans;
-    }
-
-    /**
-     * Compares the Hooman alphabetically to another Hooman.
-     * 
-     * @param hooman The Hooman to compare to.
-     * @return The comparison result.
-     */
-    private int compareAlphabeticTo(Hooman hooman) {
-        return getName().compareTo(hooman.getName());
-    }
-
-    /**
-     * Compares the cost of the Hooman to another Hooman.
-     * 
-     * @param hooman The Hooman to compare to.
-     * @return The comparison result.
-     */
-    private int compareCostTo(Hooman hooman) {
-        return getCost() - hooman.getCost();
-    }
-
-    /**
-     * Compares the evolution index of the Hooman to another Hooman.
-     * 
-     * @param hooman The Hooman to compare to.
-     * @return The comparison result.
-     */
-    private int compareEvolutionTo(Hooman hooman) {
-        return getEvolutionIndex() - hooman.getEvolutionIndex();
     }
 }
