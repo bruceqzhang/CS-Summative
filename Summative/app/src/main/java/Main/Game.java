@@ -1,11 +1,9 @@
 package Main;
+
 import java.awt.event.ActionListener;
 import java.lang.reflect.Constructor;
 import javax.swing.JFrame;
 import GameObjects.Alien;
-import GameObjects.Archer;
-import GameObjects.Caveman;
-import GameObjects.Farmer;
 import GameObjects.GameObject;
 import GameObjects.Hooman;
 import java.util.ArrayList;
@@ -16,8 +14,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-
-public class Game extends JFrame implements Runnable{
+/**
+ * Represents the main game class.
+ */
+public class Game extends JFrame implements Runnable {
     
     private GameScreen gameScreen;
     private ShopMenu shop;
@@ -26,13 +26,11 @@ public class Game extends JFrame implements Runnable{
     private Thread gameThread;
     private Insets insets;
 
+    private static final double UPS = 60.0;
+    private static final double TIME_PER_UPDATE = 1000.0 / UPS;
 
-    private final static double UPS = 120.0;
-    private final static double TIME_PER_UPDATE = 1000.0/UPS;
-
-    private final static double FPS = 60.0;
-    private final static double TIME_PER_FRAME = 1000.0/FPS;
-
+    private static final double FPS = 60.0;
+    private static final double TIME_PER_FRAME = 1000.0 / FPS;
 
     private int lives;
     private boolean roundIsFinished;
@@ -42,7 +40,6 @@ public class Game extends JFrame implements Runnable{
     private int coins;
     private int tileSize = 32;
 
-
     private long lastAlienTime, currentAlienTime;
     private int alienIndex;
      
@@ -51,28 +48,24 @@ public class Game extends JFrame implements Runnable{
     // Fields for hooman placement
     private boolean isPlacingHooman = false;
     private Class<? extends Hooman> selectedHoomanType = null; // Track selected hooman type
-    private ArrayList<Hooman> pendingHoomans = new ArrayList<Hooman>(); // Store towers that need to be placed
- 
-    Caveman test;
-    Farmer test1;
-    Archer test2;
-    Alien test3;
-    Alien test4;
-   
-     
+    private ArrayList<Hooman> pendingHoomans = new ArrayList<>(); // Store towers that need to be placed
 
-    //Main method
+    /**
+     * Main method to start the game.
+     * 
+     * @param args Command line arguments.
+     */
     public static void main(String[] args) {
         new Game();
-
     }
 
-    //Constructor
-
+    /**
+     * Constructor for the Game class.
+     */
     public Game() {
         this.round = 0;
         this.lives = 100;
-        this.coins = 100;
+        this.coins = 75;
         roundIsFinished = true;
 
         setTitle("Hoomans vs Aliens");
@@ -82,7 +75,6 @@ public class Game extends JFrame implements Runnable{
         
         setVisible(true);
 
-        
         insets = getInsets();
         int width = tileSize * 40 + insets.left + insets.right;
         int height = tileSize * 20 + insets.top + insets.bottom;
@@ -91,17 +83,16 @@ public class Game extends JFrame implements Runnable{
         // Closes the program when the user closes the window
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        
         // Window is placed at the centre of the screen
         setLocationRelativeTo(null);
         // Removes any layouts and forces every component to have bounds
         setLayout(null);
 
-
         // Creates the game screen GUI object
         gameScreen = new GameScreen();
         gameScreen.setBounds(insets.left, 0, tileSize * 40, tileSize * 20);
         add(gameScreen);
+
         // Initializing the shop
         shop = new ShopMenu(this);
         shop.setBounds(insets.left, tileSize * 20 - 160, tileSize * 40, 160);
@@ -114,7 +105,7 @@ public class Game extends JFrame implements Runnable{
         // Linking the button to perform a task on click
         sidePanel.getShopToggleButton().addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e){
+            public void actionPerformed(ActionEvent e) {
                 // Hides or shows the shop visibility
                 shop.toggleVisibility();
             }
@@ -122,11 +113,10 @@ public class Game extends JFrame implements Runnable{
 
         sidePanel.getMessageButton().addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e){
-                if(gameOver){
+            public void actionPerformed(ActionEvent e) {
+                if (gameOver) {
                     System.exit(0);
-                }
-                else if (roundIsFinished){
+                } else if (roundIsFinished) {
                     roundIsFinished = false;
                     round++;
                     loadRound();
@@ -134,7 +124,6 @@ public class Game extends JFrame implements Runnable{
             }
         });
 
-  
         // Add mouse listener for hooman placement
         addMouseListener(new MouseAdapter() {
             @Override
@@ -144,15 +133,11 @@ public class Game extends JFrame implements Runnable{
                 }
             }
         });
-    
 
-
-        //Sets the order of each component on the content pane
-
-        getContentPane().setComponentZOrder(gameScreen, 2);//Chatgpt
+        // Sets the order of each component on the content pane
+        getContentPane().setComponentZOrder(gameScreen, 2);
         getContentPane().setComponentZOrder(shop, 1);
-        getContentPane().setComponentZOrder(sidePanel,0);
-        
+        getContentPane().setComponentZOrder(sidePanel, 0);
 
         // Makes the window visible
         setVisible(true);
@@ -164,67 +149,117 @@ public class Game extends JFrame implements Runnable{
         revalidate();
         repaint();
 
-        //Starts gameThread
+        // Starts gameThread
         gameThread = new Thread(this);
         gameThread.start();
-
-        //https://chatgpt.com/share/67786f4d-d214-800f-89bd-c28037dc9ea9
-
-        
-
-       
-       
     }
 
-    public int getRound(){
+    /**
+     * Gets the current round.
+     * 
+     * @return The current round.
+     */
+    public int getRound() {
         return round;
     }
 
-    public int getLives(){
+    /**
+     * Gets the remaining lives.
+     * 
+     * @return The remaining lives.
+     */
+    public int getLives() {
         return lives;
     }
 
-    public int getCoins(){
+    /**
+     * Gets the current coins.
+     * 
+     * @return The current coins.
+     */
+    public int getCoins() {
         return coins;
     }
 
-    public GameScreen getGameScreen(){
+    /**
+     * Gets the game screen.
+     * 
+     * @return The game screen.
+     */
+    public GameScreen getGameScreen() {
         return gameScreen;
     }
 
-    public ShopMenu getShopMenu(){
+    /**
+     * Gets the shop menu.
+     * 
+     * @return The shop menu.
+     */
+    public ShopMenu getShopMenu() {
         return shop;
     }
 
-    public SidePanel getSidePanel(){
+    /**
+     * Gets the side panel.
+     * 
+     * @return The side panel.
+     */
+    public SidePanel getSidePanel() {
         return sidePanel;
     }
 
-    public boolean getRoundFinished(){
+    /**
+     * Checks if the round is finished.
+     * 
+     * @return True if the round is finished, false otherwise.
+     */
+    public boolean getRoundFinished() {
         return roundIsFinished;
     }
 
-    public boolean getGameOver(){
+    /**
+     * Checks if the game is over.
+     * 
+     * @return True if the game is over, false otherwise.
+     */
+    public boolean getGameOver() {
         return gameOver;
     }
 
+    /**
+     * Sets the round finished status.
+     * 
+     * @param roundIsFinished The new round finished status.
+     */
     public void setRoundFinished(boolean roundIsFinished) {
         this.roundIsFinished = roundIsFinished;
     }
 
-
-    public void loseLives(int lives){
-        this.lives-=lives;
+    /**
+     * Reduces the lives by the specified amount.
+     * 
+     * @param lives The amount of lives to lose.
+     */
+    public void loseLives(int lives) {
+        this.lives -= lives;
         
-        if (this.lives<=0){
+        if (this.lives <= 0) {
             gameOver = true;
         }
     }
 
-    public void addCoins(int coins){
-        this.coins+=coins;
+    /**
+     * Adds the specified amount of coins.
+     * 
+     * @param coins The amount of coins to add.
+     */
+    public void addCoins(int coins) {
+        this.coins += coins;
     }
-    
+
+    /**
+     * Loads the next round of aliens.
+     */
     private void loadRound() {
         alienIndex = 0;
         lastAlienTime = System.currentTimeMillis();
@@ -234,86 +269,83 @@ public class Game extends JFrame implements Runnable{
         }
     }
 
-    // Update method to be used for checking inputs and updating the changes in the actual game
-    // Such as movement of aliens or projectile motion
-    private void update(){
+    /**
+     * Updates the game state.
+     */
+    private void update() {
 
-        if (!pendingHoomans.isEmpty()){
+        if (!pendingHoomans.isEmpty()) {
             Hooman.addHoomans(pendingHoomans);
             pendingHoomans.clear();
         }
 
-        ArrayList<Alien> activeAliens = new ArrayList<Alien>();
-        for (Alien alien: Alien.getAliens()){
+        ArrayList<Alien> activeAliens = new ArrayList<>();
+        for (Alien alien : Alien.getAliens()) {
             alien.move();
-            if (alien.getReachedGoal()){
-                loseLives(alien.getLevelIndex()+1);
+            if (alien.getReachedGoal()) {
+                loseLives(alien.getLevelIndex() + 1);
             }
-            if (alien.getIsKilled()){
-                addCoins((int)Math.pow(alien.getOriginalLevelIndex()+1,2));
+            if (alien.getIsKilled()) {
+                addCoins((int) Math.pow(alien.getOriginalLevelIndex() + 1, 1.25));
             }
-            if (!alien.getBeingRemoved()){
+            if (!alien.getBeingRemoved()) {
                 activeAliens.add(alien);
             }
         }
         Alien.setAliens(activeAliens);
 
 
-        if (gameOver||roundIsFinished||roundAliens==null){
+        
+        if (gameOver || roundIsFinished || roundAliens == null) {
             return;
         }
         
         long currentTime = System.currentTimeMillis();
-        for (Hooman hooman: Hooman.getHoomans()){
-            if(currentTime-hooman.getLastAttackTime()>=hooman.getReloadSpeed()){
+        for (Hooman hooman : Hooman.getHoomans()) {
+            if (currentTime - hooman.getLastAttackTime() >= hooman.getReloadSpeed()) {
                 hooman.findTargetAliens();
                 hooman.attack();
             }
-            
-        
         }
-        
 
-
-        if (alienIndex<roundAliens.length){
+        if (alienIndex < roundAliens.length) {
             currentAlienTime = System.currentTimeMillis();
-            if (currentAlienTime - lastAlienTime>= roundAliens[alienIndex].getDelay()){
+            if (currentAlienTime - lastAlienTime >= roundAliens[alienIndex].getDelay()) {
                 roundAliens[alienIndex].initAlien();
                 alienIndex++;
                 lastAlienTime = System.currentTimeMillis();
             }
         }
 
-
-        
-        if (activeAliens.isEmpty() && alienIndex>=roundAliens.length && Alien.getAliens().isEmpty()){
+        if (activeAliens.isEmpty() && alienIndex >= roundAliens.length && Alien.getAliens().isEmpty()) {
             roundIsFinished = true;
-        }
-        else{
+        } else {
             roundIsFinished = false;
         }
 
     }
 
-
-
-
-
-    // Enables placement mode for the selected hooman
+    /**
+     * Enables placement mode for the selected hooman.
+     * 
+     * @param hoomanType The class of the hooman to place.
+     */
     public void startPlacementMode(Class<? extends Hooman> hoomanType) {
         isPlacingHooman = true;
         selectedHoomanType = hoomanType;
     }
 
-    // Places a hooman at the specified position
+    /**
+     * Places a hooman at the specified position.
+     * 
+     * @param position The position to place the hooman.
+     */
     private void placeHooman(Point position) {
         try {
+            Constructor<? extends Hooman> constructor = selectedHoomanType.getConstructor(Point.class, boolean.class, boolean.class);
+            Hooman newHooman = constructor.newInstance(new Point((int) (position.getX() - GameObject.getSize() / 2.0), (int) position.getY() - GameObject.getSize()), true, true);
 
-            Constructor <? extends Hooman> constructor = selectedHoomanType.getConstructor(Point.class, boolean.class, boolean.class);
-            Hooman newHooman = constructor.newInstance(new Point((int)(position.getX()-GameObject.getSize()/2.0), (int)position.getY()-GameObject.getSize()), true, true);
-            
-
-            if (coins<newHooman.getCost()){
+            if (coins < newHooman.getCost()) {
                 newHooman = null;
                 return;
             }
@@ -331,7 +363,9 @@ public class Game extends JFrame implements Runnable{
         }
     }
 
-    //Runnable method
+    /**
+     * Runnable method for the game loop.
+     */
     @Override
     public void run() {
 
@@ -342,31 +376,26 @@ public class Game extends JFrame implements Runnable{
         
         lastRepaintTime = System.currentTimeMillis();
 
-
-        //Game loop that updates and renders the game whilst keeping lag to a minimum
+        // Game loop that updates and renders the game whilst keeping lag to a minimum
         while (true) {
 
             // Finds the time elapsed and adds it to the accumulativeLag
             currentUpdateTime = System.currentTimeMillis();
-            updateTimeElapsed = currentUpdateTime-lastUpdateTime;
-            accumulativeUpdateLag+= updateTimeElapsed;
+            updateTimeElapsed = currentUpdateTime - lastUpdateTime;
+            accumulativeUpdateLag += updateTimeElapsed;
             lastUpdateTime = System.currentTimeMillis();
 
-
-
             // Since the game should run at UPS, if the total time elapsed is greater
-            // than the TIME_PER_UPDATE, then update and adjust the acumulated time and lag
-
-            while (accumulativeUpdateLag>= TIME_PER_UPDATE) {
+            // than the TIME_PER_UPDATE, then update and adjust the accumulated time and lag
+            while (accumulativeUpdateLag >= TIME_PER_UPDATE) {
                 // Updates the game
                 update();
-                //Adjusts acumulativeLag
-                accumulativeUpdateLag-=TIME_PER_UPDATE;
+                // Adjusts accumulativeLag
+                accumulativeUpdateLag -= TIME_PER_UPDATE;
             }
 
             currentRepaintTime = System.currentTimeMillis();
             repaintTimeElapsed = currentRepaintTime - lastRepaintTime;
-            
             
             // Repaint at 60 FPS
             if (repaintTimeElapsed >= TIME_PER_FRAME) {
@@ -374,16 +403,12 @@ public class Game extends JFrame implements Runnable{
                 lastRepaintTime = System.currentTimeMillis();
             }
 
-            //Trys to sleep as much as possible to reduce CPU utilisation
+            // Try to sleep as much as possible to reduce CPU utilization
             try {
                 Thread.sleep(1);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            
         }
     }
-
-
-
 }
